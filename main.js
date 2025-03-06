@@ -51,7 +51,6 @@ function square() {
   return { getValue, addMarker };
 }
 
-
 const gameController = (function (
   player1Name = 'Player 1',
   player2Name = 'Player 2'
@@ -81,16 +80,18 @@ const gameController = (function (
     // console.log(`${getActivePlayer().name}'s turn.`);
   };
 
-  
-
   let isSame = false;
   const checkRows = () => {
-    const board = gameBoard.getBoard()
+    const board = gameBoard.getBoard();
     board.map((row) => {
       const rowVals = row.map((cell) => cell.getValue());
-      console.log(getActivePlayer().marker);
-      const sameValsOne = rowVals.every((value) => (value === getActivePlayer().marker));
-      const sameValsTwo = rowVals.every((value) => (value === getActivePlayer().marker));
+      // console.log(getActivePlayer().marker);
+      const sameValsOne = rowVals.every(
+        (value) => value === getActivePlayer().marker
+      );
+      const sameValsTwo = rowVals.every(
+        (value) => value === getActivePlayer().marker
+      );
 
       if (sameValsOne || sameValsTwo) {
         isSame = true;
@@ -98,6 +99,31 @@ const gameController = (function (
     });
   };
 
+  const checkColumns = () => {
+    const board = gameBoard.getBoard();
+
+    for (let i = 0; i < board.length; i++) {
+      const row = board[i];
+      const colVals = [];
+      for (let j = 0; j < row.length; j++) {
+        colVals.push(board[j][i].getValue());
+      }
+      // console.log(colVals);
+
+      const sameValsOne = colVals.every(
+        (value) => value === getActivePlayer().marker
+      );
+      const sameValsTwo = colVals.every(
+        (value) => value === getActivePlayer().marker
+      );
+
+      if (sameValsOne || sameValsTwo) {
+        isSame = true;
+      }
+    }
+  };
+
+  
 
   // const checkValues = () => {
   //   const board = gameBoard.getBoard();
@@ -127,10 +153,10 @@ const gameController = (function (
 
     printNewRound();
     // TODO: run declareWinner here
-    
 
-    checkRows()
-    console.log(isSame);
+    checkRows();
+    checkColumns();
+    // console.log(isSame);
     if (isSame) {
       console.log(`${getActivePlayer().name} has won`);
     }
@@ -144,13 +170,13 @@ const gameController = (function (
 })();
 
 gameController.playRound(2, 1);
-gameController.playRound(1, 2);
-gameController.playRound(0, 2);
-gameController.playRound(1, 1);
-gameController.playRound(0, 0);
-gameController.playRound(2, 0);
-gameController.playRound(2, 1);
-gameController.playRound(1, 0);
+// gameController.playRound(1, 2);
+// gameController.playRound(1, 1);
+// gameController.playRound(2, 2);
+// gameController.playRound(0, 0);
+// gameController.playRound(0, 2);
+// gameController.playRound(2, 1);
+// gameController.playRound(1, 0);
 
 // TODO: When a player chooses the square already occupied don't switch the turn. Log a message showing the error and tell player to select a different square
 
