@@ -1,12 +1,4 @@
-// Test code below.
-// const text = document.querySelector('.text');
-// const btn = document.querySelector('.btn');
-
-// btn.addEventListener('click', () => {
-//   text.textContent = 'Hello';
-// })
-
-function gameBoard() {
+const gameBoard = (function () {
   // Create a board
   const rows = 3;
   const columns = 3;
@@ -20,35 +12,28 @@ function gameBoard() {
     }
   }
 
-  // console.log('Board:', board);
-
   // Get board
   const getBoard = () => board;
 
   // Update square value with Marker when a play has been made
   const updateMarker = (row, column, player) => {
-    // console.log(`Trying to update square at row ${row}, column ${column} with player ${player}`);
     if (board[row][column].getValue() === 0) {
-      // console.log(`Updating square at row ${row}, column ${column} with player ${player}`);
-
       board[row][column].addMarker(player);
     } else {
-      console.log(`Square at row ${row}, column ${column} is already occupied. Choose a different square.`);
+      console.log(
+        `Square at row ${row}, column ${column} is already occupied. Choose a different square.`
+      );
     }
   };
 
   // Print board to console
   const printBoard = () => {
-    // console.log('Printing board...');
-    const squares = board.map((row) =>
-      row.map((cell) => cell.getValue())
-    );
+    const squares = board.map((row) => row.map((cell) => cell.getValue()));
     console.log(squares);
-    // console.log('Finished printing board.');
   };
 
   return { getBoard, printBoard, updateMarker };
-}
+})();
 
 // gameBoard()
 
@@ -57,9 +42,7 @@ function square() {
 
   // Update value of square
   const addMarker = (player) => {
-    // console.log(`Attempting to add marker for player ${player}`);
     value = player;
-    // console.log(`Marker added for player ${player}`);
   };
 
   // Get value of square
@@ -68,60 +51,109 @@ function square() {
   return { getValue, addMarker };
 }
 
-function gameController(player1Name = 'Player 1', player2Name = 'Player 2') {
+
+const gameController = (function (
+  player1Name = 'Player 1',
+  player2Name = 'Player 2'
+) {
   // Create players
   const players = [
     {
       name: player1Name,
-      marker: 1
+      marker: 1,
     },
     {
       name: player2Name,
-      marker: 2
+      marker: 2,
     },
-  ]
+  ];
 
-  // Import gameBoard functions
-  const board = gameBoard()
-
-  let activePlayer = players[0]
-
-  const printNewRound = () => {
-    board.printBoard()
-    console.log(`${getActivePlayer().name}'s turn.`);
-  }
+  let activePlayer = players[0];
 
   const switchPlayerTurn = () => {
-    activePlayer = activePlayer === players[0] ? players[1] : players[0]
-  }
+    activePlayer = activePlayer === players[0] ? players[1] : players[0];
+  };
 
-  const getActivePlayer = () => activePlayer
+  const getActivePlayer = () => activePlayer;
+
+  const printNewRound = () => {
+    gameBoard.printBoard();
+    // console.log(`${getActivePlayer().name}'s turn.`);
+  };
+
+  
+
+  let isSame = false;
+  const checkRows = () => {
+    const board = gameBoard.getBoard()
+    board.map((row) => {
+      const rowVals = row.map((cell) => cell.getValue());
+      console.log(getActivePlayer().marker);
+      const sameValsOne = rowVals.every((value) => (value === getActivePlayer().marker));
+      const sameValsTwo = rowVals.every((value) => (value === getActivePlayer().marker));
+
+      if (sameValsOne || sameValsTwo) {
+        isSame = true;
+      }
+    });
+  };
+
+
+  // const checkValues = () => {
+  //   const board = gameBoard.getBoard();
+  //   let result = false;
+  //   if (checkRows(board) || checkColumns(board) || checkDiagonals(board)) {
+  //     result = true;
+  //   }
+  //   return result;
+  // };
+
+  // const declareWinner = () => {
+  //   checkRows()
+  //   if (getResult()) {
+  //     console.log(`${getActivePlayer().name} has won the game.`);
+  //   }
+  // };
+
+  // TODO: run declareWinner after every turn
 
   const playRound = (row, column) => {
-    console.log(`${getActivePlayer().name} marking the square in row: ${row} column: ${column}`);
-    console.log(getActivePlayer().marker);
-    board.updateMarker(row, column, getActivePlayer().marker)
+    console.log(
+      `${
+        getActivePlayer().name
+      } marking the square in row: ${row} column: ${column}`
+    );
+    gameBoard.updateMarker(row, column, getActivePlayer().marker);
 
-    switchPlayerTurn()
-    printNewRound()
+    printNewRound();
+    // TODO: run declareWinner here
+    
 
-  }
+    checkRows()
+    console.log(isSame);
+    if (isSame) {
+      console.log(`${getActivePlayer().name} has won`);
+    }
+    switchPlayerTurn();
+    console.log(`${getActivePlayer().name}'s turn.`);
+  };
 
-  printNewRound()
-  // playRound()
+  printNewRound();
 
-  return { playRound }
-}
+  return { playRound };
+})();
 
-const game = gameController()
-game.playRound(0, 1)
-game.playRound(0, 2)
-game.playRound(0, 0);
-game.playRound(1, 2);
-game.playRound(1, 1);
-game.playRound(1, 0);
-game.playRound(2, 2);
-game.playRound(2, 1);
-game.playRound(2, 0);
+gameController.playRound(2, 1);
+gameController.playRound(1, 2);
+gameController.playRound(0, 2);
+gameController.playRound(1, 1);
+gameController.playRound(0, 0);
+gameController.playRound(2, 0);
+gameController.playRound(2, 1);
+gameController.playRound(1, 0);
 
-game.playRound(1, 1);
+// TODO: When a player chooses the square already occupied don't switch the turn. Log a message showing the error and tell player to select a different square
+
+// TODO: Run showWinner() function if any player manages to win. Log a message saying 'Game is over! The winner is xxxxx.'
+
+// TODO: Run gameDraw() function if all squares are selected and there's no winner. Log a message saying 'the game is over and there's no winner!'
