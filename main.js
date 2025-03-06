@@ -85,7 +85,7 @@ const gameController = (function (
     const board = gameBoard.getBoard();
     board.map((row) => {
       const rowVals = row.map((cell) => cell.getValue());
-      // console.log(getActivePlayer().marker);
+      
       const sameValsOne = rowVals.every(
         (value) => value === getActivePlayer().marker
       );
@@ -108,7 +108,7 @@ const gameController = (function (
       for (let j = 0; j < row.length; j++) {
         colVals.push(board[j][i].getValue());
       }
-      // console.log(colVals);
+      
 
       const sameValsOne = colVals.every(
         (value) => value === getActivePlayer().marker
@@ -123,7 +123,28 @@ const gameController = (function (
     }
   };
 
-  
+  const checkDiagonals = () => {
+    const board = gameBoard.getBoard()
+
+    const diagonal1 = board.map((row, index) => board[index][index].getValue());
+    console.log(diagonal1);
+
+    const diagonal2 = board.map((row, index) => board[index][board.length - 1 - index].getValue());
+    console.log(diagonal2);
+
+    const sameValsOne = diagonal1.every(
+      (value) => value === getActivePlayer().marker
+    );
+    const sameValsTwo = diagonal2.every(
+      (value) => value === getActivePlayer().marker
+    );
+
+    if (sameValsOne || sameValsTwo) {
+      isSame = true;
+    }
+
+
+  }
 
   // const checkValues = () => {
   //   const board = gameBoard.getBoard();
@@ -156,7 +177,8 @@ const gameController = (function (
 
     checkRows();
     checkColumns();
-    // console.log(isSame);
+    checkDiagonals()
+  
     if (isSame) {
       console.log(`${getActivePlayer().name} has won`);
     }
@@ -169,12 +191,12 @@ const gameController = (function (
   return { playRound };
 })();
 
-gameController.playRound(2, 1);
-// gameController.playRound(1, 2);
-// gameController.playRound(1, 1);
-// gameController.playRound(2, 2);
-// gameController.playRound(0, 0);
+gameController.playRound(2, 2);
+// gameController.playRound(2, 0);
+// gameController.playRound(2, 1);
 // gameController.playRound(0, 2);
+// gameController.playRound(0, 0);
+// gameController.playRound(1, 1);
 // gameController.playRound(2, 1);
 // gameController.playRound(1, 0);
 
