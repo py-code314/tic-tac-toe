@@ -51,6 +51,70 @@ function square() {
   return { getValue, addMarker };
 }
 
+function checkValues () {
+  const board = gameBoard.getBoard();
+
+  // Loop through every row and check the values are same
+  const checkRows = () => {
+    let sameValues = false
+    const rowsCheck = board.map((row) => {
+      const rowValues = row.map((cell) => cell.getValue());
+      const allSame = rowValues.every(
+        (value) => value !== 0 && value === rowValues[0]
+      );
+      
+      if (allSame) {
+        sameValues = true
+      }
+    });
+    
+    return sameValues;
+  };
+
+
+  // Loop through every column and check the values are same
+  const checkColumns = () => {
+
+    for (let columnIndex = 0; columnIndex < board.length; columnIndex++) {
+      const columnValues = board.map((row) => row[columnIndex].getValue());
+
+      const allSame = columnValues.every(
+        (value) => value !== 0 && value === columnValues[0]
+      );
+
+      if (allSame) {
+        return true;
+      }
+    }
+  };
+
+
+// Check the squares diagonally for same values
+  const checkDiagonals = () => {
+    // const board = gameBoard.getBoard();
+    const leftToRightDiagonal = [];
+    const rightToLeftDiagonal = [];
+
+    for (let i = 0; i < board.length; i++) {
+      leftToRightDiagonal.push(board[i][i].getValue());
+      rightToLeftDiagonal.push(board[i][board.length - 1 - i].getValue());
+    }
+
+    const isLeftToRightDiagonalSame = leftToRightDiagonal.every(
+      (value) => value !== 0 && value === leftToRightDiagonal[0]
+    );
+    const isRightToLeftDiagonalSame = rightToLeftDiagonal.every(
+      (value) => value !== 0 && value === rightToLeftDiagonal[0]
+    );
+
+    if (isLeftToRightDiagonalSame || isRightToLeftDiagonalSame) {
+      return true;
+    }
+  };
+
+  return { checkRows, checkColumns, checkDiagonals };
+};
+
 const gameController = (function (
   player1Name = 'Player 1',
   player2Name = 'Player 2'
@@ -80,87 +144,6 @@ const gameController = (function (
     // console.log(`${getActivePlayer().name}'s turn.`);
   };
 
-  let isSame = false;
-  const checkRows = () => {
-    const board = gameBoard.getBoard();
-    board.map((row) => {
-      const rowVals = row.map((cell) => cell.getValue());
-      
-      const sameValsOne = rowVals.every(
-        (value) => value === getActivePlayer().marker
-      );
-      const sameValsTwo = rowVals.every(
-        (value) => value === getActivePlayer().marker
-      );
-
-      if (sameValsOne || sameValsTwo) {
-        isSame = true;
-      }
-    });
-  };
-
-  const checkColumns = () => {
-    const board = gameBoard.getBoard();
-
-    for (let i = 0; i < board.length; i++) {
-      const row = board[i];
-      const colVals = [];
-      for (let j = 0; j < row.length; j++) {
-        colVals.push(board[j][i].getValue());
-      }
-      
-
-      const sameValsOne = colVals.every(
-        (value) => value === getActivePlayer().marker
-      );
-      const sameValsTwo = colVals.every(
-        (value) => value === getActivePlayer().marker
-      );
-
-      if (sameValsOne || sameValsTwo) {
-        isSame = true;
-      }
-    }
-  };
-
-  const checkDiagonals = () => {
-    const board = gameBoard.getBoard()
-
-    const diagonal1 = board.map((row, index) => board[index][index].getValue());
-    console.log(diagonal1);
-
-    const diagonal2 = board.map((row, index) => board[index][board.length - 1 - index].getValue());
-    console.log(diagonal2);
-
-    const sameValsOne = diagonal1.every(
-      (value) => value === getActivePlayer().marker
-    );
-    const sameValsTwo = diagonal2.every(
-      (value) => value === getActivePlayer().marker
-    );
-
-    if (sameValsOne || sameValsTwo) {
-      isSame = true;
-    }
-
-
-  }
-
-  // const checkValues = () => {
-  //   const board = gameBoard.getBoard();
-  //   let result = false;
-  //   if (checkRows(board) || checkColumns(board) || checkDiagonals(board)) {
-  //     result = true;
-  //   }
-  //   return result;
-  // };
-
-  // const declareWinner = () => {
-  //   checkRows()
-  //   if (getResult()) {
-  //     console.log(`${getActivePlayer().name} has won the game.`);
-  //   }
-  // };
 
   // TODO: run declareWinner after every turn
 
@@ -175,30 +158,52 @@ const gameController = (function (
     printNewRound();
     // TODO: run declareWinner here
 
-    checkRows();
-    checkColumns();
-    checkDiagonals()
-  
-    if (isSame) {
+    
+
+    const isSame = checkValues()
+    // Check values are same or not in a row / column / diagonal
+    if (
+      isSame.checkRows() || isSame.checkColumns() || isSame.checkDiagonals()
+    ) {
       console.log(`${getActivePlayer().name} has won`);
+    } else {
+      switchPlayerTurn();
+      console.log(`${getActivePlayer().name}'s turn.`);
     }
-    switchPlayerTurn();
-    console.log(`${getActivePlayer().name}'s turn.`);
+
+
+    
   };
 
   printNewRound();
+  console.log(`${getActivePlayer().name}'s turn.`);
 
   return { playRound };
 })();
 
-gameController.playRound(2, 2);
-// gameController.playRound(2, 0);
-// gameController.playRound(2, 1);
-// gameController.playRound(0, 2);
+// Row wins
 // gameController.playRound(0, 0);
-// gameController.playRound(1, 1);
-// gameController.playRound(2, 1);
 // gameController.playRound(1, 0);
+// gameController.playRound(0, 1);
+// gameController.playRound(1, 1);
+// gameController.playRound(0, 2);
+
+// Column wins
+// gameController.playRound(0, 0);
+// gameController.playRound(0, 1);
+// gameController.playRound(1, 0);
+// gameController.playRound(1, 1);
+// gameController.playRound(2, 2);
+// gameController.playRound(2, 1);
+
+// Diagonal wins
+// gameController.playRound(0, 0);
+// gameController.playRound(0, 2);
+// gameController.playRound(2, 2);
+// gameController.playRound(2, 0);
+// gameController.playRound(1, 0);
+// gameController.playRound(1, 1);
+
 
 // TODO: When a player chooses the square already occupied don't switch the turn. Log a message showing the error and tell player to select a different square
 
