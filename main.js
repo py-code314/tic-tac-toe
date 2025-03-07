@@ -51,7 +51,7 @@ function square() {
   return { getValue, addMarker };
 }
 
-function checkValues () {
+const checkValues = (function () {
   const board = gameBoard.getBoard();
 
   // Loop through every row and check the values are same
@@ -113,7 +113,9 @@ function checkValues () {
   };
 
   return { checkRows, checkColumns, checkDiagonals };
-};
+})();
+
+
 
 const gameController = (function (
   player1Name = 'Player 1',
@@ -144,8 +146,22 @@ const gameController = (function (
     // console.log(`${getActivePlayer().name}'s turn.`);
   };
 
+  function declareWinner() {
+    // Check for same values in a row / column / diagonal
+    if (
+      checkValues.checkRows() ||
+      checkValues.checkColumns() ||
+      checkValues.checkDiagonals()
+    ) {
+      console.log(`${getActivePlayer().name} has won`);
+    } else {
+      switchPlayerTurn();
+      console.log(`${getActivePlayer().name}'s turn.`);
+    }
+  }
 
-  // TODO: run declareWinner after every turn
+  const getWinner = () => declareWinner()
+
 
   const playRound = (row, column) => {
     console.log(
@@ -156,23 +172,8 @@ const gameController = (function (
     gameBoard.updateMarker(row, column, getActivePlayer().marker);
 
     printNewRound();
-    // TODO: run declareWinner here
+    getWinner()
 
-    
-
-    const isSame = checkValues()
-    // Check values are same or not in a row / column / diagonal
-    if (
-      isSame.checkRows() || isSame.checkColumns() || isSame.checkDiagonals()
-    ) {
-      console.log(`${getActivePlayer().name} has won`);
-    } else {
-      switchPlayerTurn();
-      console.log(`${getActivePlayer().name}'s turn.`);
-    }
-
-
-    
   };
 
   printNewRound();
