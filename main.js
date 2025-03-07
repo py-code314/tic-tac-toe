@@ -147,28 +147,26 @@ const gameController = (function (
     // console.log(`${getActivePlayer().name}'s turn.`);
   };
 
-  const checkForWinner = () => {
-    let message = '';
-    const winner =
-      checkValues.checkRows() ||
-      checkValues.checkColumns() ||
-      checkValues.checkDiagonals();
-    if (winner) {
-      console.log(`${getActivePlayer().name} has won`);
-      message = `${getActivePlayer().name} has won`;
-    } else if (!winner && !checkValues.hasZeroes()) {
-      console.log(`Game is a draw`);
-      message = `Game is a draw`;
-    } else {
-      switchPlayerTurn();
-      console.log(`${getActivePlayer().name}'s turn.`);
-      message = `${getActivePlayer().name}'s turn.`;
-    
-    }
-    return message
-  }
+  let winMessage = ''
+   function checkForWinner() {
+     const winner =
+       checkValues.checkRows() ||
+       checkValues.checkColumns() ||
+       checkValues.checkDiagonals();
 
-  const getWinner = () => checkForWinner();
+     if (winner) {
+       console.log(`${getActivePlayer().name} has won`);
+       winMessage = `${getActivePlayer().name} has won`;
+     } else if (!winner && !checkValues.hasZeroes()) {
+       console.log(`Game is a draw`);
+       winMessage = `Game is a draw`;
+     } else {
+       switchPlayerTurn();
+       console.log(`${getActivePlayer().name}'s turn.`);
+     }
+   }
+
+  const getMsg = () => winMessage;
 
   const updateMarkerSuccess = (row, column) => {
     const success = gameBoard.updateMarker(
@@ -180,9 +178,7 @@ const gameController = (function (
     // Don't allow player to mark the square already occupied
     if (success) {
       printNewRound();
-      // switchPlayerTurn();
-      // console.log(`${getActivePlayer().name}'s turn.`);
-      getWinner();
+      checkForWinner();
     } else {
       // Show error to player
       console.log(
@@ -190,7 +186,9 @@ const gameController = (function (
       );
       console.log(`${getActivePlayer().name}'s turn.`);
     }
-  };
+  }
+
+  
 
   const playRound = (row, column) => {
     console.log(
@@ -206,7 +204,7 @@ const gameController = (function (
   printNewRound();
   console.log(`${getActivePlayer().name}'s turn.`);
 
-  return { playRound, getWinner, getActivePlayer, updateMarkerSuccess, getBoard: gameBoard.getBoard };
+  return { playRound, checkForWinner, getMsg, getActivePlayer, updateMarkerSuccess, getBoard: gameBoard.getBoard };
 })();
 
 
@@ -214,7 +212,7 @@ function screenController() {
   // Get html elements
   const boardContainer = document.querySelector('.board');
   const playerTurn = document.querySelector('.turn');
-  // const winnerDiv = document.querySelector('.winner');
+  
 
   const updateScreen = () => {
     // Clear the board after each turn
@@ -254,7 +252,7 @@ function screenController() {
 
     gameController.playRound(rowNum, colNum)
     updateScreen()
-    showWinner()
+    showWinner();
   }
 
   boardContainer.addEventListener('click', handleBtnClick)
@@ -263,14 +261,16 @@ function screenController() {
   function showWinner() {
     const winnerDiv = document.querySelector('.winner');
 
-    const winner = gameController.getWinner();
-    winnerDiv.textContent = `${winner}`
+    const winner = gameController.getMsg();
+    console.log(winner);
+    winnerDiv.textContent = winner
   }
 
 
   // Initial render
   updateScreen()
   // showWinner()
+ 
 }
 
 screenController()
