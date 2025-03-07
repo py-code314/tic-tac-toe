@@ -19,10 +19,12 @@ const gameBoard = (function () {
   const updateMarker = (row, column, player) => {
     if (board[row][column].getValue() === 0) {
       board[row][column].addMarker(player);
+      return true;
     } else {
-      console.log(
-        `Square at row ${row}, column ${column} is already occupied. Choose a different square.`
-      );
+      // console.log(
+      //   `Square at row ${row}, column ${column} is already occupied. Choose a different square.`
+      // );
+      return false;
     }
   };
 
@@ -56,25 +58,23 @@ const checkValues = (function () {
 
   // Loop through every row and check the values are same
   const checkRows = () => {
-    let sameValues = false
+    let sameValues = false;
     const rowsCheck = board.map((row) => {
       const rowValues = row.map((cell) => cell.getValue());
       const allSame = rowValues.every(
         (value) => value !== 0 && value === rowValues[0]
       );
-      
+
       if (allSame) {
-        sameValues = true
+        sameValues = true;
       }
     });
-    
+
     return sameValues;
   };
 
-
   // Loop through every column and check the values are same
   const checkColumns = () => {
-
     for (let columnIndex = 0; columnIndex < board.length; columnIndex++) {
       const columnValues = board.map((row) => row[columnIndex].getValue());
 
@@ -88,8 +88,7 @@ const checkValues = (function () {
     }
   };
 
-
-// Check the squares diagonally for same values
+  // Check the squares diagonally for same values
   const checkDiagonals = () => {
     // const board = gameBoard.getBoard();
     const leftToRightDiagonal = [];
@@ -114,8 +113,6 @@ const checkValues = (function () {
 
   return { checkRows, checkColumns, checkDiagonals };
 })();
-
-
 
 const gameController = (function (
   player1Name = 'Player 1',
@@ -146,13 +143,13 @@ const gameController = (function (
     // console.log(`${getActivePlayer().name}'s turn.`);
   };
 
-  function declareWinner() {
-    // Check for same values in a row / column / diagonal
-    if (
+  function checkForWinner() {
+    const winner =
       checkValues.checkRows() ||
       checkValues.checkColumns() ||
-      checkValues.checkDiagonals()
-    ) {
+      checkValues.checkDiagonals();
+
+    if (winner) {
       console.log(`${getActivePlayer().name} has won`);
     } else {
       switchPlayerTurn();
@@ -160,8 +157,30 @@ const gameController = (function (
     }
   }
 
-  const getWinner = () => declareWinner()
+  const getWinner = () => checkForWinner();
 
+  const updateMarkerSuccess = (row, column) => {
+    const success = gameBoard.updateMarker(
+      row,
+      column,
+      getActivePlayer().marker
+    );
+    console.log(success);
+
+    // Don't allow player to mark the square already occupied
+    if (success) {
+      printNewRound();
+      getWinner();
+    } else {
+      // Show error to player
+      console.log(
+        `Square at row ${row}, column ${column} is already occupied. Choose a different square.`
+      );
+      console.log(`${getActivePlayer().name}'s turn.`);
+    }
+  }
+
+  
 
   const playRound = (row, column) => {
     console.log(
@@ -169,17 +188,14 @@ const gameController = (function (
         getActivePlayer().name
       } marking the square in row: ${row} column: ${column}`
     );
-    gameBoard.updateMarker(row, column, getActivePlayer().marker);
 
-    printNewRound();
-    getWinner()
-
+    updateMarkerSuccess(row, column)
   };
 
   printNewRound();
   console.log(`${getActivePlayer().name}'s turn.`);
 
-  return { playRound };
+  return { playRound, getWinner, updateMarkerSuccess };
 })();
 
 // Row wins
@@ -188,6 +204,11 @@ const gameController = (function (
 // gameController.playRound(0, 1);
 // gameController.playRound(1, 1);
 // gameController.playRound(0, 2);
+
+// Return false on updateMarker
+// gameController.playRound(0, 0);
+// gameController.playRound(0, 0);
+// gameController.playRound(1, 0);
 
 // Column wins
 // gameController.playRound(0, 0);
@@ -204,7 +225,6 @@ const gameController = (function (
 // gameController.playRound(2, 0);
 // gameController.playRound(1, 0);
 // gameController.playRound(1, 1);
-
 
 // TODO: When a player chooses the square already occupied don't switch the turn. Log a message showing the error and tell player to select a different square
 
