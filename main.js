@@ -166,7 +166,9 @@ const gameController = (function (
      }
    }
 
-  const getMsg = () => winMessage;
+  const getWinner = () => winMessage;
+
+  let errorMessage = ''
 
   const updateMarkerSuccess = (row, column) => {
     const success = gameBoard.updateMarker(
@@ -179,16 +181,18 @@ const gameController = (function (
     if (success) {
       printNewRound();
       checkForWinner();
+      errorMessage = ''
     } else {
       // Show error to player
       console.log(
         `Square at row ${row}, column ${column} is already occupied. Choose a different square.`
       );
+      errorMessage = `Please choose a different square.`
       console.log(`${getActivePlayer().name}'s turn.`);
     }
   }
 
-  
+  const getError = () => errorMessage;
 
   const playRound = (row, column) => {
     console.log(
@@ -204,7 +208,7 @@ const gameController = (function (
   printNewRound();
   console.log(`${getActivePlayer().name}'s turn.`);
 
-  return { playRound, checkForWinner, getMsg, getActivePlayer, updateMarkerSuccess, getBoard: gameBoard.getBoard };
+  return { playRound, checkForWinner, getWinner, getError, getActivePlayer, updateMarkerSuccess, getBoard: gameBoard.getBoard };
 })();
 
 
@@ -252,24 +256,32 @@ function screenController() {
 
     gameController.playRound(rowNum, colNum)
     updateScreen()
-    showWinner();
+    showMessage();
   }
 
   boardContainer.addEventListener('click', handleBtnClick)
 
 
-  function showWinner() {
+  function showMessage() {
     const winnerDiv = document.querySelector('.winner');
+    const errorDiv = document.querySelector('.error');
 
-    const winner = gameController.getMsg();
+    // Show error message
+    const error = gameController.getError()
+    console.log(error);
+    errorDiv.textContent = error
+
+    // Show winning message
+    const winner = gameController.getWinner();
     console.log(winner);
     winnerDiv.textContent = winner
+
+    
   }
 
 
   // Initial render
   updateScreen()
-  // showWinner()
  
 }
 
