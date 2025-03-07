@@ -8,13 +8,40 @@
   
 </head>
 <body>
+  <h1>TIC TAC TOE</h1>
+  <div class="names">
+    <form class="inputs" action="#">
+
+      <div class="inputs__player-1">
+        <label for="player1" name="player1">Player 1: </label>
+        <input id="player1" name="player1" type="text" placeholder="Name" autofocus required>
+        <button class="btn">Submit</button>
+      </div>
+   
+      <div class="inputs__player-2">
+        <label for="player2" name="player2">Player 2: </label>
+        <input id="player2" name="player2" type="text" placeholder="Name" required>
+        <button class="btn">Submit</button>
+      </div>
+    </form>
+    <button id="start-btn" class="btn btn-start">Start the Game</button>
+
+  </div>
   <div class="container">
-    <div class="turn"></div>
+    <div class="turn">
+      <p class="turn__msg"></p>
+    </div>
     <div class="board"></div>
-    <div class="error"></div>
-    <div class="winner"></div>
+    <div class="error">
+      <p class="error__msg"></p>
+    </div>
+    <div class="winner">
+      <p class="winner__msg"></p>
+    </div>
     
   </div>
+
+  <button id="restart-btn" class="btn btn-restart" >Restart the Game</button>
   
 
   <script src="./main.js"></script>

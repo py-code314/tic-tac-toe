@@ -215,7 +215,7 @@ const gameController = (function (
 function screenController() {
   // Get html elements
   const boardContainer = document.querySelector('.board');
-  const playerTurn = document.querySelector('.turn');
+  const playerTurn = document.querySelector('.turn__msg');
   
 
   const updateScreen = () => {
@@ -263,18 +263,18 @@ function screenController() {
 
 
   function showMessage() {
-    const winnerDiv = document.querySelector('.winner');
-    const errorDiv = document.querySelector('.error');
+    const winnerMsg = document.querySelector('.winner__msg');
+    const errorMsg = document.querySelector('.error__msg');
 
     // Show error message
     const error = gameController.getError()
     console.log(error);
-    errorDiv.textContent = error
+    errorMsg.textContent = error
 
     // Show winning message
     const winner = gameController.getWinner();
     console.log(winner);
-    winnerDiv.textContent = winner
+    winnerMsg.textContent = winner
 
     
   }
