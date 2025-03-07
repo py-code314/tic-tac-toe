@@ -143,14 +143,24 @@ const gameController = (function (
     // console.log(`${getActivePlayer().name}'s turn.`);
   };
 
+  function checkBoardForZeroes() {
+    const board = gameBoard.getBoard();
+    return board.some((row) => row.some((cell) => cell.getValue() === 0));
+  }
+
+  const hasZeroes = () => checkBoardForZeroes()
+
   function checkForWinner() {
     const winner =
       checkValues.checkRows() ||
       checkValues.checkColumns() ||
       checkValues.checkDiagonals();
-
+// console.log(boardHasZeroes());
     if (winner) {
       console.log(`${getActivePlayer().name} has won`);
+    }
+    else if (!winner && !hasZeroes()) {
+      console.log(`Game is a draw`);
     } else {
       switchPlayerTurn();
       console.log(`${getActivePlayer().name}'s turn.`);
@@ -165,7 +175,7 @@ const gameController = (function (
       column,
       getActivePlayer().marker
     );
-    console.log(success);
+    // console.log(success);
 
     // Don't allow player to mark the square already occupied
     if (success) {
@@ -178,9 +188,7 @@ const gameController = (function (
       );
       console.log(`${getActivePlayer().name}'s turn.`);
     }
-  }
-
-  
+  };
 
   const playRound = (row, column) => {
     console.log(
@@ -189,7 +197,7 @@ const gameController = (function (
       } marking the square in row: ${row} column: ${column}`
     );
 
-    updateMarkerSuccess(row, column)
+    updateMarkerSuccess(row, column);
   };
 
   printNewRound();
@@ -226,8 +234,15 @@ const gameController = (function (
 // gameController.playRound(1, 0);
 // gameController.playRound(1, 1);
 
-// TODO: When a player chooses the square already occupied don't switch the turn. Log a message showing the error and tell player to select a different square
-
-// TODO: Run showWinner() function if any player manages to win. Log a message saying 'Game is over! The winner is xxxxx.'
+// Check for zeroes
+gameController.playRound(0, 0);
+gameController.playRound(0, 1);
+gameController.playRound(1, 0);
+gameController.playRound(2, 0);
+gameController.playRound(1, 1);
+gameController.playRound(1, 2);
+gameController.playRound(2, 1);
+gameController.playRound(2, 2);
+gameController.playRound(0, 2);
 
 // TODO: Run gameDraw() function if all squares are selected and there's no winner. Log a message saying 'the game is over and there's no winner!'
