@@ -21,9 +21,6 @@ const gameBoard = (function () {
       board[row][column].addMarker(player);
       return true;
     } else {
-      // console.log(
-      //   `Square at row ${row}, column ${column} is already occupied. Choose a different square.`
-      // );
       return false;
     }
   };
@@ -111,7 +108,14 @@ const checkValues = (function () {
     }
   };
 
-  return { checkRows, checkColumns, checkDiagonals };
+  const checkForZeroes = () => {
+    const board = gameBoard.getBoard();
+    return board.some((row) => row.some((cell) => cell.getValue() === 0));
+  }
+
+  const hasZeroes = () => checkForZeroes();
+
+  return { checkRows, checkColumns, checkDiagonals, hasZeroes };
 })();
 
 const gameController = (function (
@@ -143,28 +147,25 @@ const gameController = (function (
     // console.log(`${getActivePlayer().name}'s turn.`);
   };
 
-  function checkBoardForZeroes() {
-    const board = gameBoard.getBoard();
-    return board.some((row) => row.some((cell) => cell.getValue() === 0));
-  }
-
-  const hasZeroes = () => checkBoardForZeroes()
-
-  function checkForWinner() {
+  const checkForWinner = () => {
+    let message = '';
     const winner =
       checkValues.checkRows() ||
       checkValues.checkColumns() ||
       checkValues.checkDiagonals();
-// console.log(boardHasZeroes());
     if (winner) {
       console.log(`${getActivePlayer().name} has won`);
-    }
-    else if (!winner && !hasZeroes()) {
+      message = `${getActivePlayer().name} has won`;
+    } else if (!winner && !checkValues.hasZeroes()) {
       console.log(`Game is a draw`);
+      message = `Game is a draw`;
     } else {
       switchPlayerTurn();
       console.log(`${getActivePlayer().name}'s turn.`);
+      message = `${getActivePlayer().name}'s turn.`;
+    
     }
+    return message
   }
 
   const getWinner = () => checkForWinner();
@@ -175,11 +176,12 @@ const gameController = (function (
       column,
       getActivePlayer().marker
     );
-    // console.log(success);
 
     // Don't allow player to mark the square already occupied
     if (success) {
       printNewRound();
+      // switchPlayerTurn();
+      // console.log(`${getActivePlayer().name}'s turn.`);
       getWinner();
     } else {
       // Show error to player
@@ -198,13 +200,82 @@ const gameController = (function (
     );
 
     updateMarkerSuccess(row, column);
+    
   };
 
   printNewRound();
   console.log(`${getActivePlayer().name}'s turn.`);
 
-  return { playRound, getWinner, updateMarkerSuccess };
+  return { playRound, getWinner, getActivePlayer, updateMarkerSuccess, getBoard: gameBoard.getBoard };
 })();
+
+
+function screenController() {
+  // Get html elements
+  const boardContainer = document.querySelector('.board');
+  const playerTurn = document.querySelector('.turn');
+  // const winnerDiv = document.querySelector('.winner');
+
+  const updateScreen = () => {
+    // Clear the board after each turn
+    boardContainer.textContent = ""
+
+    // Get board data and active player's name after each turn
+    const activePlayer = gameController.getActivePlayer()
+    const board = gameController.getBoard()
+    
+
+
+    // Display player's turn
+    playerTurn.textContent = `${activePlayer.name}'s turn...`
+
+
+    // Render board
+    let html = '';
+    board.forEach((row, rowIndex ) => {
+      row.forEach((cell, columnIndex) => {
+        html += `
+      <button class="cell" data-row="${rowIndex}" data-column="${columnIndex}">${cell.getValue()}</button>
+    `;
+      });
+    });
+    boardContainer.innerHTML = html;
+  }
+
+  // Handle button click
+  function handleBtnClick(event) {
+    
+
+    const rowNum = event.target.dataset.row
+    const colNum = event.target.dataset.column
+
+    // Make sure user clicks inside a square
+    if (!rowNum || !colNum) return;
+
+    gameController.playRound(rowNum, colNum)
+    updateScreen()
+    showWinner()
+  }
+
+  boardContainer.addEventListener('click', handleBtnClick)
+
+
+  function showWinner() {
+    const winnerDiv = document.querySelector('.winner');
+
+    const winner = gameController.getWinner();
+    winnerDiv.textContent = `${winner}`
+  }
+
+
+  // Initial render
+  updateScreen()
+  // showWinner()
+}
+
+screenController()
+
+
 
 // Row wins
 // gameController.playRound(0, 0);
@@ -235,14 +306,12 @@ const gameController = (function (
 // gameController.playRound(1, 1);
 
 // Check for zeroes
-gameController.playRound(0, 0);
-gameController.playRound(0, 1);
-gameController.playRound(1, 0);
-gameController.playRound(2, 0);
-gameController.playRound(1, 1);
-gameController.playRound(1, 2);
-gameController.playRound(2, 1);
-gameController.playRound(2, 2);
-gameController.playRound(0, 2);
-
-// TODO: Run gameDraw() function if all squares are selected and there's no winner. Log a message saying 'the game is over and there's no winner!'
+// gameController.playRound(0, 0);
+// gameController.playRound(0, 1);
+// gameController.playRound(1, 0);
+// gameController.playRound(2, 0);
+// gameController.playRound(1, 1);
+// gameController.playRound(1, 2);
+// gameController.playRound(2, 1);
+// gameController.playRound(2, 2);
+// gameController.playRound(0, 2);
