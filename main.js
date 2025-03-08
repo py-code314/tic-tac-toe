@@ -47,7 +47,10 @@ function square() {
   // Get value of square
   const getValue = () => value;
 
-  return { getValue, addMarker };
+  // Reset value to 0
+  const setValue = () => value = 0
+
+  return { getValue, addMarker, setValue };
 }
 
 const checkValues = (function () {
@@ -138,11 +141,10 @@ const gameController = (function (
 
   let activePlayer = players[0];
 
-
   const switchPlayerTurn = () => {
     activePlayer = activePlayer === players[0] ? players[1] : players[0];
   };
-console.log(activePlayer);
+  console.log(activePlayer);
   const getActivePlayer = () => activePlayer;
 
   const printNewRound = () => {
@@ -281,9 +283,6 @@ function screenController() {
   }
 
   function getNames() {
-
-    
-
     // Get inputs
     let player1Input = document.querySelector('.player1');
     let player2Input = document.querySelector('.player2');
@@ -293,17 +292,16 @@ function screenController() {
     const player1Name = document.querySelector('.players__one');
     const player2Name = document.querySelector('.players__two');
 
-    
-    player1Name.textContent = player1Input.value
-    gameController.players[0].name = player1Input.value
-    
+    player1Name.textContent = player1Input.value;
+    gameController.players[0].name = player1Input.value;
+
     player2Name.textContent = player2Input.value;
-    gameController.players[1].name = player2Input.value
+    gameController.players[1].name = player2Input.value;
 
     player1Input.value = '';
-    player2Input.value = ''
+    player2Input.value = '';
 
-    updateScreen()
+    updateScreen();
   }
   // Add event listener for Submit button
   document.querySelector('#form').addEventListener('click', (event) => {
@@ -320,47 +318,51 @@ function screenController() {
     }
   });
 
+  function restartGame() {
+    // Get board data
+    const board = gameBoard.getBoard();
+
+    // Reset all square values to 0
+    let html = '';
+    board.forEach((row, rowIndex) => {
+      row.forEach((cell, columnIndex) => {
+        html += `
+      <button class="cell" data-row="${rowIndex}" data-column="${columnIndex}">${cell.setValue()}</button>
+    `;
+      });
+    });
+    boardContainer.innerHTML = html;
+
+    // Get error & winner message divs and clear the text
+    const winnerMsg = document.querySelector('.winner__msg');
+    const errorMsg = document.querySelector('.error__msg');
+
+    winnerMsg.textContent = '';
+    errorMsg.textContent = '';
+
+    // Get name divs and clear them
+    const player1Name = document.querySelector('.players__one');
+    const player2Name = document.querySelector('.players__two');
+
+    player1Name.textContent = '';
+    player2Name.textContent = '';
+
+    // Reset players names
+    gameController.players[0].name = 'Player 1';
+    gameController.players[1].name = 'Player 2';
+
+    // Display player's turn
+    const activePlayer = gameController.getActivePlayer();
+    playerTurn.textContent = `${activePlayer.name}'s turn...`;
+
+    // updateScreen()
+  }
+
+  document.querySelector('#restart-btn').addEventListener('click', restartGame);
+
   // Initial render
   updateScreen();
 }
 
 screenController();
 
-// Row wins
-// gameController.playRound(0, 0);
-// gameController.playRound(1, 0);
-// gameController.playRound(0, 1);
-// gameController.playRound(1, 1);
-// gameController.playRound(0, 2);
-
-// Return false on updateMarker
-// gameController.playRound(0, 0);
-// gameController.playRound(0, 0);
-// gameController.playRound(1, 0);
-
-// Column wins
-// gameController.playRound(0, 0);
-// gameController.playRound(0, 1);
-// gameController.playRound(1, 0);
-// gameController.playRound(1, 1);
-// gameController.playRound(2, 2);
-// gameController.playRound(2, 1);
-
-// Diagonal wins
-// gameController.playRound(0, 0);
-// gameController.playRound(0, 2);
-// gameController.playRound(2, 2);
-// gameController.playRound(2, 0);
-// gameController.playRound(1, 0);
-// gameController.playRound(1, 1);
-
-// Check for zeroes
-// gameController.playRound(0, 0);
-// gameController.playRound(0, 1);
-// gameController.playRound(1, 0);
-// gameController.playRound(2, 0);
-// gameController.playRound(1, 1);
-// gameController.playRound(1, 2);
-// gameController.playRound(2, 1);
-// gameController.playRound(2, 2);
-// gameController.playRound(0, 2);
