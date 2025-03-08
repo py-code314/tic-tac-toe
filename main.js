@@ -226,8 +226,8 @@ const gameController = (function (
 
 function screenController() {
   // Get html elements
-  const boardContainer = document.querySelector('.board');
-  const playerTurn = document.querySelector('.turn__msg');
+  const boardContainer = document.querySelector('.display__board');
+  const playerTurn = document.querySelector('.display__turn');
 
   const updateScreen = () => {
     // Clear the board after each turn
@@ -268,8 +268,10 @@ function screenController() {
   boardContainer.addEventListener('click', handleBtnClick);
 
   function showMessage() {
-    const winnerMsg = document.querySelector('.winner__msg');
-    const errorMsg = document.querySelector('.error__msg');
+    const winnerMsg = document.querySelector('.display__winner');
+    const errorMsg = document.querySelector('.display__error');
+
+     const playerTurn = document.querySelector('.display__turn');
 
     // Show error message
     const error = gameController.getError();
@@ -278,9 +280,44 @@ function screenController() {
 
     // Show winning message
     const winner = gameController.getWinner();
-    console.log(winner);
-    winnerMsg.textContent = winner;
+    // console.log(winner);
+
+    if (winner) {
+      winnerMsg.textContent = winner;
+      disableBoard()
+
+      // playerTurn.textContent = '';
+
+      // Disable inputs
+      // Disable Start the Game button
+      // Disable board buttons
+      // TODO: Write a separate function disableBoard()
+    }
   }
+
+  function disableBoard() {
+    // Clear active player's name
+    const playerTurn = document.querySelector('.display__turn');
+    playerTurn.textContent = '';
+
+    // Disable inputs
+    const form = document.querySelector('#form');
+    console.log(form.elements);
+    Array.from(form.elements).forEach(element => element.disabled = true)
+
+    // Disable Start button
+    const startBtn = document.querySelector('#start-btn');
+    startBtn.disabled = true
+
+    // Disable all the buttons in board
+    const boardContainer = document.querySelector('.display__board');
+    const squares = boardContainer.querySelectorAll('.cell')
+    console.log(squares);
+    Array.from(squares).forEach(btn => btn.disabled = true)
+  }
+
+  // disableBoard()
+
 
   function getNames() {
     // Get inputs
@@ -301,7 +338,7 @@ function screenController() {
     player1Input.value = '';
     player2Input.value = '';
 
-    updateScreen();
+    // updateScreen();
   }
   // Add event listener for Submit button
   document.querySelector('#form').addEventListener('click', (event) => {
@@ -334,8 +371,8 @@ function screenController() {
     boardContainer.innerHTML = html;
 
     // Get error & winner message divs and clear the text
-    const winnerMsg = document.querySelector('.winner__msg');
-    const errorMsg = document.querySelector('.error__msg');
+    const winnerMsg = document.querySelector('.display__winner');
+    const errorMsg = document.querySelector('.display__error');
 
     winnerMsg.textContent = '';
     errorMsg.textContent = '';
@@ -355,13 +392,25 @@ function screenController() {
     const activePlayer = gameController.getActivePlayer();
     playerTurn.textContent = `${activePlayer.name}'s turn...`;
 
-    // updateScreen()
+    // Enable inputs
+    const form = document.querySelector('#form');
+    console.log(form.elements);
+    Array.from(form.elements).forEach((element) => (element.disabled = false));
+
+    // Clear player turn text
+    playerTurn.textContent = ''
+
+    // Enable Start button
+    const startBtn = document.querySelector('#start-btn');
+    startBtn.disabled = false;
+    
   }
 
   document.querySelector('#restart-btn').addEventListener('click', restartGame);
 
+  document.querySelector('#start-btn').addEventListener('click', updateScreen)
   // Initial render
-  updateScreen();
+  // updateScreen();
 }
 
 screenController();

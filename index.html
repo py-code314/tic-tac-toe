@@ -1,55 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tic Tac Toe</title>
-  <link rel="stylesheet" href="styles.css">
-  
-</head>
-<body>
-  <h1>TIC TAC TOE</h1>
-  <div class="names">
-    <form id="form" class="inputs" action="#">
-
-      <div class="inputs__player-1">
-        <label for="player1" name="player1">Player 1: </label>
-        <input id="player1" class="player1" name="player1" type="text" placeholder="Name" autofocus required>
-        <!-- <button id="submit-btn-1" class="btn btn-submit">Submit</button> -->
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tic Tac Toe</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="game">
+      <h1 class="game__title">TIC TAC TOE</h1>
+      <div class="instructions">
+        <h2 class="instructions__title">Instructions to Play</h2>
+        <ol class="instructions__list">
+          <li class="instructions__list-item">
+            You can choose to enter the names of players or not!
+          </li>
+          <li class="instructions__list-item">
+            Enter your names and click Start button to start playing.
+          </li>
+          <li class="instructions__list-item">
+            Or just click the Start button if you want to play anonymously.
+          </li>
+          <li class="instructions__list-item">
+            Click Restart button any time you want to reset the game.
+          </li>
+        </ol>
       </div>
-   
-      <div class="inputs__player-2">
-        <label for="player2" name="player2">Player 2: </label>
-        <input id="player2" class="player2" name="player2" type="text" placeholder="Name" required>
-        <!-- <button id="submit-btn-2" class="btn btn-submit">Submit</button> -->
+
+      <form id="form" class="inputs" action="#">
+        <div class="inputs__player-1">
+          <label for="player1" name="player1">Player 1: </label>
+          <input
+            id="player1"
+            class="player1"
+            name="player1"
+            type="text"
+            placeholder="Name"
+            autofocus
+            required />
+        </div>
+
+        <div class="inputs__player-2">
+          <label for="player2" name="player2">Player 2: </label>
+          <input
+            id="player2"
+            class="player2"
+            name="player2"
+            type="text"
+            placeholder="Name"
+            required />
+        </div>
+        <button id="submit-btn" class="btn btn-submit">Submit</button>
+      </form>
+
+      <div class="players">
+        <div class="players__names">
+          <p class="players__one"></p>
+          <p class="players__two"></p>
+        </div>
+        
       </div>
 
-      <button id="submit-btn" class="btn btn-submit">Submit</button>
-    </form>
-    <button id="start-btn" class="btn btn-start">Start the Game</button>
+      <div class="display">
+        <button id="start-btn" class="btn btn-start">Start the Game</button>
 
-  </div>
-  <div class="container">
-    <div class="players">
-      <p class="players__one"></p>
-      <p class="players__two"></p>
-    </div>
-    <div class="turn">
-      <p class="turn__msg"></p>
-    </div>
-    <div class="board"></div>
-    <div class="error">
-      <p class="error__msg"></p>
-    </div>
-    <div class="winner">
-      <p class="winner__msg"></p>
-    </div>
-    
-  </div>
+        <p class="display__turn"></p>
 
-  <button id="restart-btn" class="btn btn-restart" >Restart the Game</button>
-  
+        <div class="display__board"></div>
 
-  <script src="./main.js"></script>
-</body>
+        <p class="display__error"></p>
+
+        <p class="display__winner"></p>
+
+        <button id="restart-btn" class="btn btn-restart">
+          Restart the Game
+        </button>
+      </div>
+    </main>
+
+    <script src="./main.js"></script>
+  </body>
 </html>
