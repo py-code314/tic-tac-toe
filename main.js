@@ -111,7 +111,7 @@ const checkValues = (function () {
   const checkForZeroes = () => {
     const board = gameBoard.getBoard();
     return board.some((row) => row.some((cell) => cell.getValue() === 0));
-  }
+  };
 
   const hasZeroes = () => checkForZeroes();
 
@@ -147,28 +147,28 @@ const gameController = (function (
     // console.log(`${getActivePlayer().name}'s turn.`);
   };
 
-  let winMessage = ''
-   function checkForWinner() {
-     const winner =
-       checkValues.checkRows() ||
-       checkValues.checkColumns() ||
-       checkValues.checkDiagonals();
+  let winMessage = '';
+  function checkForWinner() {
+    const winner =
+      checkValues.checkRows() ||
+      checkValues.checkColumns() ||
+      checkValues.checkDiagonals();
 
-     if (winner) {
-       console.log(`${getActivePlayer().name} has won`);
-       winMessage = `${getActivePlayer().name} has won`;
-     } else if (!winner && !checkValues.hasZeroes()) {
-       console.log(`Game is a draw`);
-       winMessage = `Game is a draw`;
-     } else {
-       switchPlayerTurn();
-       console.log(`${getActivePlayer().name}'s turn.`);
-     }
-   }
+    if (winner) {
+      console.log(`${getActivePlayer().name} has won`);
+      winMessage = `${getActivePlayer().name} has won`;
+    } else if (!winner && !checkValues.hasZeroes()) {
+      console.log(`Game is a draw`);
+      winMessage = `Game is a draw`;
+    } else {
+      switchPlayerTurn();
+      console.log(`${getActivePlayer().name}'s turn.`);
+    }
+  }
 
   const getWinner = () => winMessage;
 
-  let errorMessage = ''
+  let errorMessage = '';
 
   const updateMarkerSuccess = (row, column) => {
     const success = gameBoard.updateMarker(
@@ -181,16 +181,16 @@ const gameController = (function (
     if (success) {
       printNewRound();
       checkForWinner();
-      errorMessage = ''
+      errorMessage = '';
     } else {
       // Show error to player
       console.log(
         `Square at row ${row}, column ${column} is already occupied. Choose a different square.`
       );
-      errorMessage = `Please choose a different square.`
+      errorMessage = `Please choose a different square.`;
       console.log(`${getActivePlayer().name}'s turn.`);
     }
-  }
+  };
 
   const getError = () => errorMessage;
 
@@ -202,39 +202,41 @@ const gameController = (function (
     );
 
     updateMarkerSuccess(row, column);
-    
   };
 
   printNewRound();
   console.log(`${getActivePlayer().name}'s turn.`);
 
-  return { playRound, checkForWinner, getWinner, getError, getActivePlayer, updateMarkerSuccess, getBoard: gameBoard.getBoard };
+  return {
+    playRound,
+    checkForWinner,
+    getWinner,
+    getError,
+    getActivePlayer,
+    updateMarkerSuccess,
+    getBoard: gameBoard.getBoard,
+  };
 })();
-
 
 function screenController() {
   // Get html elements
   const boardContainer = document.querySelector('.board');
   const playerTurn = document.querySelector('.turn__msg');
-  
 
   const updateScreen = () => {
     // Clear the board after each turn
-    boardContainer.textContent = ""
+    boardContainer.textContent = '';
 
     // Get board data and active player's name after each turn
-    const activePlayer = gameController.getActivePlayer()
-    const board = gameController.getBoard()
-    
-
+    const activePlayer = gameController.getActivePlayer();
+    const board = gameController.getBoard();
 
     // Display player's turn
-    playerTurn.textContent = `${activePlayer.name}'s turn...`
-
+    playerTurn.textContent = `${activePlayer.name}'s turn...`;
 
     // Render board
     let html = '';
-    board.forEach((row, rowIndex ) => {
+    board.forEach((row, rowIndex) => {
       row.forEach((cell, columnIndex) => {
         html += `
       <button class="cell" data-row="${rowIndex}" data-column="${columnIndex}">${cell.getValue()}</button>
@@ -242,52 +244,74 @@ function screenController() {
       });
     });
     boardContainer.innerHTML = html;
-  }
+  };
 
   // Handle button click
   function handleBtnClick(event) {
-    
-
-    const rowNum = event.target.dataset.row
-    const colNum = event.target.dataset.column
+    const rowNum = event.target.dataset.row;
+    const colNum = event.target.dataset.column;
 
     // Make sure user clicks inside a square
     if (!rowNum || !colNum) return;
 
-    gameController.playRound(rowNum, colNum)
-    updateScreen()
+    gameController.playRound(rowNum, colNum);
+    updateScreen();
     showMessage();
   }
 
-  boardContainer.addEventListener('click', handleBtnClick)
-
+  boardContainer.addEventListener('click', handleBtnClick);
 
   function showMessage() {
     const winnerMsg = document.querySelector('.winner__msg');
     const errorMsg = document.querySelector('.error__msg');
 
     // Show error message
-    const error = gameController.getError()
+    const error = gameController.getError();
     console.log(error);
-    errorMsg.textContent = error
+    errorMsg.textContent = error;
 
     // Show winning message
     const winner = gameController.getWinner();
     console.log(winner);
-    winnerMsg.textContent = winner
-
-    
+    winnerMsg.textContent = winner;
   }
 
+  function getNames() {
+    // Get inputs
+    let player1Input = document.querySelector('.player1');
+    let player2Input = document.querySelector('.player2');
+    // console.log(player1Input, player2Input);
+
+    // Get name elements to show names
+    const player1Name = document.querySelector('.players__one');
+    const player2Name = document.querySelector('.players__two');
+
+    player1Name.textContent = player1Input.value;
+    player2Name.textContent = player2Input.value;
+
+    player1Input.value = '';
+    player2Input.value = ''
+  }
+  // Add event listener for Submit button
+  document.querySelector('#form').addEventListener('click', (event) => {
+    event.preventDefault();
+    getNames();
+  });
+
+  document.querySelector('#form').addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      getNames();
+      player1Input = '';
+      player2Input = '';
+    }
+  });
 
   // Initial render
-  updateScreen()
- 
+  updateScreen();
 }
 
-screenController()
-
-
+screenController();
 
 // Row wins
 // gameController.playRound(0, 0);

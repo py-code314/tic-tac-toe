@@ -10,24 +10,30 @@
 <body>
   <h1>TIC TAC TOE</h1>
   <div class="names">
-    <form class="inputs" action="#">
+    <form id="form" class="inputs" action="#">
 
       <div class="inputs__player-1">
         <label for="player1" name="player1">Player 1: </label>
-        <input id="player1" name="player1" type="text" placeholder="Name" autofocus required>
-        <button class="btn">Submit</button>
+        <input id="player1" class="player1" name="player1" type="text" placeholder="Name" autofocus required>
+        <!-- <button id="submit-btn-1" class="btn btn-submit">Submit</button> -->
       </div>
    
       <div class="inputs__player-2">
         <label for="player2" name="player2">Player 2: </label>
-        <input id="player2" name="player2" type="text" placeholder="Name" required>
-        <button class="btn">Submit</button>
+        <input id="player2" class="player2" name="player2" type="text" placeholder="Name" required>
+        <!-- <button id="submit-btn-2" class="btn btn-submit">Submit</button> -->
       </div>
+
+      <button id="submit-btn" class="btn btn-submit">Submit</button>
     </form>
     <button id="start-btn" class="btn btn-start">Start the Game</button>
 
   </div>
   <div class="container">
+    <div class="players">
+      <p class="players__one"></p>
+      <p class="players__two"></p>
+    </div>
     <div class="turn">
       <p class="turn__msg"></p>
     </div>
