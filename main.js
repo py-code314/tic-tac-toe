@@ -134,12 +134,15 @@ const gameController = (function (
     },
   ];
 
+  // const getPlayers = () => players
+
   let activePlayer = players[0];
+
 
   const switchPlayerTurn = () => {
     activePlayer = activePlayer === players[0] ? players[1] : players[0];
   };
-
+console.log(activePlayer);
   const getActivePlayer = () => activePlayer;
 
   const printNewRound = () => {
@@ -208,6 +211,7 @@ const gameController = (function (
   console.log(`${getActivePlayer().name}'s turn.`);
 
   return {
+    players,
     playRound,
     checkForWinner,
     getWinner,
@@ -277,6 +281,9 @@ function screenController() {
   }
 
   function getNames() {
+
+    
+
     // Get inputs
     let player1Input = document.querySelector('.player1');
     let player2Input = document.querySelector('.player2');
@@ -286,11 +293,17 @@ function screenController() {
     const player1Name = document.querySelector('.players__one');
     const player2Name = document.querySelector('.players__two');
 
-    player1Name.textContent = player1Input.value;
+    
+    player1Name.textContent = player1Input.value
+    gameController.players[0].name = player1Input.value
+    
     player2Name.textContent = player2Input.value;
+    gameController.players[1].name = player2Input.value
 
     player1Input.value = '';
     player2Input.value = ''
+
+    updateScreen()
   }
   // Add event listener for Submit button
   document.querySelector('#form').addEventListener('click', (event) => {
