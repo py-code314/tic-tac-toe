@@ -126,7 +126,7 @@ const gameController = (function (
   player2Name = 'Player 2'
 ) {
   // Create players
-  const players = [
+  let players = [
     {
       name: player1Name,
       marker: 1,
@@ -173,6 +173,10 @@ const gameController = (function (
 
   const getWinner = () => winMessage;
 
+  const clearWinner = () => {
+    winMessage = ''
+  }
+
   let errorMessage = '';
 
   const updateMarkerSuccess = (row, column) => {
@@ -209,6 +213,7 @@ const gameController = (function (
     updateMarkerSuccess(row, column);
   };
 
+  // Initial render
   printNewRound();
   console.log(`${getActivePlayer().name}'s turn.`);
 
@@ -217,6 +222,7 @@ const gameController = (function (
     playRound,
     checkForWinner,
     getWinner,
+    clearWinner,
     getError,
     getActivePlayer,
     updateMarkerSuccess,
@@ -254,6 +260,7 @@ function screenController() {
 
   // Handle button click
   function handleBtnClick(event) {
+    // Get row and column numbers
     const rowNum = event.target.dataset.row;
     const colNum = event.target.dataset.column;
 
@@ -271,11 +278,11 @@ function screenController() {
     const winnerMsg = document.querySelector('.display__winner');
     const errorMsg = document.querySelector('.display__error');
 
-     const playerTurn = document.querySelector('.display__turn');
+    //  const playerTurn = document.querySelector('.display__turn');
 
     // Show error message
     const error = gameController.getError();
-    console.log(error);
+    // console.log(error);
     errorMsg.textContent = error;
 
     // Show winning message
@@ -285,13 +292,6 @@ function screenController() {
     if (winner) {
       winnerMsg.textContent = winner;
       disableBoard()
-
-      // playerTurn.textContent = '';
-
-      // Disable inputs
-      // Disable Start the Game button
-      // Disable board buttons
-      // TODO: Write a separate function disableBoard()
     }
   }
 
@@ -302,24 +302,28 @@ function screenController() {
 
     // Disable inputs
     const form = document.querySelector('#form');
-    console.log(form.elements);
+    // console.log(form.elements);
     Array.from(form.elements).forEach(element => element.disabled = true)
 
+    // Disable Submit button
+    const submitBtn = document.querySelector('#submit-btn');
+    submitBtn.disabled = true
+
     // Disable Start button
-    const startBtn = document.querySelector('#start-btn');
-    startBtn.disabled = true
+    // const startBtn = document.querySelector('#start-btn');
+    // startBtn.disabled = true
 
     // Disable all the buttons in board
     const boardContainer = document.querySelector('.display__board');
     const squares = boardContainer.querySelectorAll('.cell')
-    console.log(squares);
+    // console.log(squares);
     Array.from(squares).forEach(btn => btn.disabled = true)
   }
 
   // disableBoard()
 
 
-  function getNames() {
+  function getPlayerNames() {
     // Get inputs
     let player1Input = document.querySelector('.player1');
     let player2Input = document.querySelector('.player2');
@@ -331,6 +335,7 @@ function screenController() {
 
     player1Name.textContent = player1Input.value;
     gameController.players[0].name = player1Input.value;
+    // console.log(gameController.players[0].name);
 
     player2Name.textContent = player2Input.value;
     gameController.players[1].name = player2Input.value;
@@ -338,44 +343,41 @@ function screenController() {
     player1Input.value = '';
     player2Input.value = '';
 
-    // updateScreen();
+    updateScreen();
   }
   // Add event listener for Submit button
   document.querySelector('#form').addEventListener('click', (event) => {
     event.preventDefault();
-    getNames();
+    getPlayerNames();
   });
 
   document.querySelector('#form').addEventListener('keydown', (event) => {
     if (event.key === 'Enter') {
       event.preventDefault();
-      getNames();
+      getPlayerNames();
       player1Input = '';
       player2Input = '';
     }
   });
 
   function restartGame() {
-    // Get board data
+    // Get board data and set values to 0
     const board = gameBoard.getBoard();
-
-    // Reset all square values to 0
-    let html = '';
-    board.forEach((row, rowIndex) => {
-      row.forEach((cell, columnIndex) => {
-        html += `
-      <button class="cell" data-row="${rowIndex}" data-column="${columnIndex}">${cell.setValue()}</button>
-    `;
-      });
-    });
-    boardContainer.innerHTML = html;
+    board.map((row) => row.map((cell) => cell.setValue()));
+    
 
     // Get error & winner message divs and clear the text
     const winnerMsg = document.querySelector('.display__winner');
-    const errorMsg = document.querySelector('.display__error');
+    // const errorMsg = document.querySelector('.display__error');
 
     winnerMsg.textContent = '';
-    errorMsg.textContent = '';
+    // errorMsg.textContent = '';
+    gameController.clearWinner()
+
+    // Change winMessage value
+    let winMsg = gameController.getWinner()
+    console.log(winMsg);
+    winMsg = ''
 
     // Get name divs and clear them
     const player1Name = document.querySelector('.players__one');
@@ -385,32 +387,33 @@ function screenController() {
     player2Name.textContent = '';
 
     // Reset players names
-    gameController.players[0].name = 'Player 1';
-    gameController.players[1].name = 'Player 2';
+    // gameController.players[0].name = 'Player 1';
+    // gameController.players[1].name = 'Player 2';
 
     // Display player's turn
-    const activePlayer = gameController.getActivePlayer();
-    playerTurn.textContent = `${activePlayer.name}'s turn...`;
+    // const activePlayer = gameController.getActivePlayer();
+    // playerTurn.textContent = `${activePlayer.name}'s turn...`;
 
     // Enable inputs
     const form = document.querySelector('#form');
-    console.log(form.elements);
+    // console.log(form.elements);
     Array.from(form.elements).forEach((element) => (element.disabled = false));
 
     // Clear player turn text
-    playerTurn.textContent = ''
+    // playerTurn.textContent = ''
 
-    // Enable Start button
-    const startBtn = document.querySelector('#start-btn');
-    startBtn.disabled = false;
+    // Enable Submit button
+    const submitBtn = document.querySelector('#submit-btn');
+    submitBtn.disabled = false;
     
+    updateScreen()
   }
 
   document.querySelector('#restart-btn').addEventListener('click', restartGame);
 
-  document.querySelector('#start-btn').addEventListener('click', updateScreen)
+  // document.querySelector('#start-btn').addEventListener('click', restartGame)
   // Initial render
-  // updateScreen();
+  updateScreen();
 }
 
 screenController();
