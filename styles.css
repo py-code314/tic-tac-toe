@@ -1,13 +1,225 @@
+
+
+/* ===================
+   CSS VARIABLES
+   =================== */
+:root {
+  /* Font family */
+  --ff-karla: "Karla", sans-serif;
+  --ff-merriweather: "Merriweather", serif;
+
+  /* Font Weights */
+  --fw-bold: 700;
+
+  /* Colors */
+  --clr-black: hsl(0, 0%, 0%);
+  --clr-grey: hsl(0, 0%, 50%);
+  --clr-light-grey: hsl(0, 0%, 86%);
+  --clr-white: hsl(100, 100%, 100%);
+  --clr-teal: hsl(180, 100%, 25%);
+  --clr-light-yellow: hsl(60, 96%, 74%);
+  --clr-light-slate-grey: hsl(210, 32%, 73%);
+  --clr-blue: hsl(207, 93%, 50%);
+
+  /* Font sizes */
+  --fs-500: 1.125rem;
+  --fs-700: 1.5rem;
+  --fs-1100: 2.5rem;
+
+
+
+  /* Spacing */
+  --space-40: 0.25rem;
+  --space-80: 0.5rem;
+  --space-400: 1rem;
+  --space-650: 1.375rem;
+  --space-700: 1.5rem;
+
+  --board-width: 31.25rem;
+  --board-height: 31.25rem;
+
+  /* Utilities */
+  --shadow-1: 0px 5px 10px 0px hsla(0, 0%, 0%, 0.5);
+  --shadow-2: 5px 5px 8px 3px hsla(0, 2%, 8%, 0.14), -5px -5px 8px 3px hsla(0, 1%, 15%, 0.14);
+  --bd-radius-1: 5px;
+  --bd-radius-2: 10px;
+
+}
+
+
+/* ===================
+   JOSH COMEAU' RESET 
+   =================== */
+
+/* Use a more-intuitive box-sizing model */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Remove default margin */
+* {
+  margin: 0;
+  padding: 0;
+}
+
+/* Typographic tweaks! */
+body {
+  min-height: 100svh;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Improve media defaults */
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* Remove built-in form typography styles */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+/* Avoid text overflows */
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+/* Create a root stacking context */
+#root,
+#__next {
+  isolation: isolate;
+}
+
+
+
+body {
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: var(--ff-merriweather);
+}
+
+.game {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-700);
+
+}
+
+.heading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.heading__title {
+  font-size: var(--fs-1100);
+}
+
+.heading__title,
+.instructions__title {
+  font-family: var(--ff-karla);
+}
+
+.instructions {
+  background-color: var(--clr-light-yellow);
+  padding: var(--space-400);
+  border-radius: var(--bd-radius-2);
+  box-shadow:  var(--shadow-1);
+}
+
+
+.instructions__list {
+  padding: var(--space-400);
+}
+
+.form {
+  display: flex;
+  align-items: center;
+  gap: var(--space-650);
+  padding: var(--space-400);
+  background-color: var(--clr-light-slate-grey);
+  border-radius: var(--bd-radius-2);
+}
+
+.form__label {
+  font-size: var(--fs-500);
+  font-weight: var(--fw-bold);
+}
+
+.form__input {
+  padding: var(--space-40) var(--space-80);
+  border-radius: var(--bd-radius-1);
+  border: 1px solid var(--clr-black);
+}
+
+.btn {
+  border: transparent;
+  border-radius: var(--bd-radius-1);
+  padding: var(--space-40) var(--space-400);
+  font-size: var(--fs-500);
+  background-color: var(--clr-blue);
+  color: var(--clr-white);
+}
+
+.players {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.players__name {
+  font-size: var(--fs-700);
+  font-weight: var(--fw-bold);
+  background-color: #eff2f5;
+  border-radius: var(--bd-radius-1);
+  padding: var(--space-80) var(--space-400);
+  border: 1px solid var(--clr-black);
+}
+
+.display {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-400)
+}
+
+.display__turn {
+  font-size: var(--fs-700);
+  font-weight: var(--fw-bold);
+}
+
 .display__board {
   display: grid;
-  height: 500px;
-  width: 500px;
+  height: var(--board-height);
+  width: var(--board-width);
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
-  border: 5px solid black;
+  /* border: 5px solid var(--clr-black); */
   /* gap: 2px; */
-  padding: 2px;
+  padding: var(--space-650);
   /* background-color: steelblue; */
+  border: transparent;
+  border-radius: var(--bd-radius-2);
+  box-shadow: var(--shadow-2);
 }
 
 .cell {
@@ -16,10 +228,52 @@
   align-items: center;
   text-align: center;
   font-size: 5rem;
-  border: 2px solid grey;
-  background: teal;
-  color: white;
+  border: none;
+  background-color: var(--clr-white);
+  /* border: 2px solid var(--clr-grey); */
+  /* background: var(--clr-teal); */
+  /* color: var(--clr-white); */
   cursor: pointer;
+  /* margin: 0; */
+}
+
+
+
+.cell:nth-child(5) {
+  border-right: 2px solid var(--clr-light-grey);
+  border-bottom: 1px solid var(--clr-light-grey);
+}
+
+.cell:nth-child(1) {
+  border-right: 2px solid var(--clr-light-grey);
+  border-bottom: 1px solid var(--clr-light-grey);
+}
+
+.cell:nth-child(2) {
+  border-right: 2px solid var(--clr-light-grey);
+  border-bottom: 1px solid var(--clr-light-grey);
+}
+
+.cell:nth-child(3) {
+  border-bottom: 1px solid var(--clr-light-grey);
+}
+
+.cell:nth-child(4) {
+  border-bottom: 1px solid var(--clr-light-grey);
+  border-right: 2px solid var(--clr-light-grey);
+}
+
+.cell:nth-child(6) {
+  border-bottom: 1px solid var(--clr-light-grey);
+}
+
+.cell:nth-child(7) {
+  border-right: 2px solid var(--clr-light-grey);
+  
+}
+
+.cell:nth-child(8) {
+  border-right: 2px solid var(--clr-light-grey);
 }
 
 /* TODO: Add visual indicator for disabled board buttons */
