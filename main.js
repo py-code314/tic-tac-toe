@@ -161,6 +161,11 @@ const gameController = (function (
   console.log(activePlayer);
   const getActivePlayer = () => activePlayer;
 
+  // Reset active player
+  const resetActivePlayer = () => {
+    activePlayer = players[0];
+  };
+
   const printNewRound = () => {
     gameBoard.printBoard();
     // console.log(`${getActivePlayer().name}'s turn.`);
@@ -239,6 +244,7 @@ const gameController = (function (
     clearWinner,
     getError,
     getActivePlayer,
+    resetActivePlayer,
     updateMarkerSuccess,
     getBoard: gameBoard.getBoard,
   };
@@ -250,6 +256,20 @@ function screenController() {
   const playerTurn = document.querySelector('.display__turn');
 
   const updateScreen = () => {
+    // Get name elements to show names
+    const player1Name = document.querySelector('.players__one');
+    const player2Name = document.querySelector('.players__two');
+
+    const imageHtml1 = `<img src="${gameController.players[0].marker}" alt="" width="30" height="30">`;
+    const imageHtml2 = `<img src="${gameController.players[1].marker}" alt="" width="30" height="30">`;
+    
+    player1Name.textContent = gameController.players[0].name;
+    player1Name.innerHTML = imageHtml1 + player1Name.textContent;
+    
+    player2Name.textContent = gameController.players[1].name;
+    player2Name.innerHTML = imageHtml2 + player2Name.textContent;
+    
+
     // Clear the board after each turn
     boardContainer.textContent = '';
 
@@ -271,7 +291,6 @@ function screenController() {
     });
     boardContainer.innerHTML = html;
   };
-
 
   // Handle button click
   function handleBtnClick(event) {
@@ -406,6 +425,9 @@ function screenController() {
 
     player1Name.textContent = '';
     player2Name.textContent = '';
+
+    // Reset active player
+    gameController.resetActivePlayer();
 
     // Reset players names
     // gameController.players[0].name = 'Player 1';

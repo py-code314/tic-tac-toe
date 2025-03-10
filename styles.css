@@ -16,11 +16,16 @@
   --clr-grey: hsl(0, 0%, 50%);
   --clr-light-grey: hsl(0, 0%, 86%);
   --clr-white: hsl(100, 100%, 100%);
-  --clr-white-1: #f8f9fa;
+  --clr-white-1: hsl(210, 17%, 98%);
   --clr-teal: hsl(180, 100%, 25%);
-  --clr-light-yellow: hsl(60, 96%, 74%);
-  --clr-light-slate-grey: hsl(210, 32%, 73%);
+  --clr-light-gold: hsl(49, 89%, 75%);
+  /* --clr-light-yellow: hsl(60, 96%, 74%); */
+  --clr-light-blue: hsl(194, 76%, 87%);
+  /* --clr-light-slate-grey: hsl(210, 32%, 73%); */
   --clr-blue: hsl(207, 93%, 50%);
+  --clr-red: hsl(354, 67%, 52%);
+  --clr-green: hsl(120, 100%, 20%);
+  --clr-light-pink: hsl(353, 84%, 85%);
 
   /* Font sizes */
   --fs-500: 1.125rem;
@@ -114,6 +119,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: var(--space-400);
   font-family: var(--ff-merriweather);
 }
 
@@ -140,7 +146,7 @@ body {
 }
 
 .instructions {
-  background-color: var(--clr-light-yellow);
+  background-color: var(--clr-light-gold);
   padding: var(--space-400);
   border-radius: var(--bd-radius-2);
   box-shadow:  var(--shadow-1);
@@ -156,7 +162,7 @@ body {
   align-items: center;
   gap: var(--space-650);
   padding: var(--space-400);
-  background-color: var(--clr-light-slate-grey);
+  background-color: var(--clr-light-blue);
   border-radius: var(--bd-radius-2);
 }
 
@@ -189,15 +195,22 @@ body {
   display: flex;
   justify-content: space-around;
   align-items: center;
+  background-color: var(--clr-light-pink);
+  padding: var(--space-400);
+  border-radius: var(--bd-radius-2);
 }
 
 .players__name {
   font-size: var(--fs-700);
+  text-transform: uppercase;
   font-weight: var(--fw-bold);
-  background-color: #eff2f5;
+  /* background-color: #eff2f5; */
   border-radius: var(--bd-radius-1);
-  padding: var(--space-80) var(--space-400);
-  border: 1px solid var(--clr-black);
+  /* padding: var(--space-80) var(--space-400); */
+  /* border: 1px solid var(--clr-black); */
+  display: flex;
+  justify-content: center;
+  align-content: center;
 }
 
 .display {
@@ -291,5 +304,9 @@ body {
 }
 
 .display__error {
-  color: #D73343;
+  color: var(--clr-red);
+}
+
+.display__winner {
+  color: var(--clr-green);
 }
