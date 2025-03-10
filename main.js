@@ -17,7 +17,7 @@ const gameBoard = (function () {
 
   // Update square value with Marker when a play has been made
   const updateMarker = (row, column, player) => {
-    if (board[row][column].getValue() === 0) {
+    if (board[row][column].getValue() === '') {
       board[row][column].addMarker(player);
       return true;
     } else {
@@ -37,18 +37,21 @@ const gameBoard = (function () {
 // gameBoard()
 
 function square() {
-  let value = 0;
+  let value = '';
 
   // Update value of square
   const addMarker = (player) => {
-    value = player;
+    let html = ''
+    html += `<img src='${player}' alt='' width='80' height='80'>`
+    // value = player;
+    value = html
   };
 
   // Get value of square
   const getValue = () => value;
 
   // Reset value to 0
-  const setValue = () => value = 0
+  const setValue = () => value = ''
 
   return { getValue, addMarker, setValue };
 }
@@ -62,7 +65,7 @@ const checkValues = (function () {
     const rowsCheck = board.map((row) => {
       const rowValues = row.map((cell) => cell.getValue());
       const allSame = rowValues.every(
-        (value) => value !== 0 && value === rowValues[0]
+        (value) => value !== '' && value === rowValues[0]
       );
 
       if (allSame) {
@@ -79,7 +82,7 @@ const checkValues = (function () {
       const columnValues = board.map((row) => row[columnIndex].getValue());
 
       const allSame = columnValues.every(
-        (value) => value !== 0 && value === columnValues[0]
+        (value) => value !== '' && value === columnValues[0]
       );
 
       if (allSame) {
@@ -100,10 +103,10 @@ const checkValues = (function () {
     }
 
     const isLeftToRightDiagonalSame = leftToRightDiagonal.every(
-      (value) => value !== 0 && value === leftToRightDiagonal[0]
+      (value) => value !== '' && value === leftToRightDiagonal[0]
     );
     const isRightToLeftDiagonalSame = rightToLeftDiagonal.every(
-      (value) => value !== 0 && value === rightToLeftDiagonal[0]
+      (value) => value !== '' && value === rightToLeftDiagonal[0]
     );
 
     if (isLeftToRightDiagonalSame || isRightToLeftDiagonalSame) {
@@ -113,7 +116,7 @@ const checkValues = (function () {
 
   const checkForZeroes = () => {
     const board = gameBoard.getBoard();
-    return board.some((row) => row.some((cell) => cell.getValue() === 0));
+    return board.some((row) => row.some((cell) => cell.getValue() === ''));
   };
 
   const hasZeroes = () => checkForZeroes();
@@ -129,11 +132,11 @@ const gameController = (function (
   let players = [
     {
       name: player1Name,
-      marker: 1,
+      marker: './images/icon-circle.png',
     },
     {
       name: player2Name,
-      marker: 2,
+      marker: './images/icon-cross.png',
     },
   ];
 
@@ -185,7 +188,7 @@ const gameController = (function (
       column,
       getActivePlayer().marker
     );
-
+console.log(success);
     // Don't allow player to mark the square already occupied
     if (success) {
       printNewRound();

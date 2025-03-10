@@ -16,6 +16,7 @@
   --clr-grey: hsl(0, 0%, 50%);
   --clr-light-grey: hsl(0, 0%, 86%);
   --clr-white: hsl(100, 100%, 100%);
+  --clr-white-1: #f8f9fa;
   --clr-teal: hsl(180, 100%, 25%);
   --clr-light-yellow: hsl(60, 96%, 74%);
   --clr-light-slate-grey: hsl(210, 32%, 73%);
@@ -109,7 +110,7 @@ h6 {
 
 
 body {
-  
+  background-color: var(--clr-white-1);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -177,6 +178,11 @@ body {
   font-size: var(--fs-500);
   background-color: var(--clr-blue);
   color: var(--clr-white);
+  cursor: pointer;
+}
+
+.btn:disabled {
+  cursor: not-allowed;
 }
 
 .players {
@@ -202,12 +208,15 @@ body {
   gap: var(--space-400)
 }
 
-.display__turn {
+.display__turn,
+.display__error,
+.display__winner {
   font-size: var(--fs-700);
   font-weight: var(--fw-bold);
 }
 
 .display__board {
+  background-color: var(--clr-white);
   display: grid;
   height: var(--board-height);
   width: var(--board-width);
@@ -230,11 +239,16 @@ body {
   font-size: 5rem;
   border: none;
   background-color: var(--clr-white);
+  
   /* border: 2px solid var(--clr-grey); */
   /* background: var(--clr-teal); */
   /* color: var(--clr-white); */
   cursor: pointer;
   /* margin: 0; */
+}
+
+.cell:disabled {
+  cursor: not-allowed;
 }
 
 
@@ -276,4 +290,6 @@ body {
   border-right: 2px solid var(--clr-light-grey);
 }
 
-/* TODO: Add visual indicator for disabled board buttons */
+.display__error {
+  color: red
+}
