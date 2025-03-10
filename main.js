@@ -18,6 +18,7 @@ const gameBoard = (function () {
   // Update square value with Marker when a play has been made
   const updateMarker = (row, column, player) => {
     if (board[row][column].getValue() === '') {
+      console.log(board[row][column].getValue());
       board[row][column].addMarker(player);
       return true;
     } else {
@@ -41,17 +42,27 @@ function square() {
 
   // Update value of square
   const addMarker = (player) => {
-    let html = ''
-    html += `<img src='${player}' alt='' width='80' height='80'>`
-    // value = player;
-    value = html
+    let html = '';
+    html += `<img class='cell__image' src='${player}' alt='' width='80' height='80'>`;
+
+    value = html;
+
+    // let html = '';
+    // board.forEach((row, rowIndex) => {
+    //   row.forEach((cell, columnIndex) => {
+    //     html += `
+    //   <img data-row="${rowIndex}" data-column="${columnIndex}" src='${player}' alt='' width='80' height='80'>
+    // `;
+    //     cell.innerHTML = html
+    //   });
+    // });
   };
 
   // Get value of square
   const getValue = () => value;
 
   // Reset value to 0
-  const setValue = () => value = ''
+  const setValue = () => (value = '');
 
   return { getValue, addMarker, setValue };
 }
@@ -177,8 +188,8 @@ const gameController = (function (
   const getWinner = () => winMessage;
 
   const clearWinner = () => {
-    winMessage = ''
-  }
+    winMessage = '';
+  };
 
   let errorMessage = '';
 
@@ -188,7 +199,7 @@ const gameController = (function (
       column,
       getActivePlayer().marker
     );
-console.log(success);
+    console.log(success);
     // Don't allow player to mark the square already occupied
     if (success) {
       printNewRound();
@@ -261,14 +272,23 @@ function screenController() {
     boardContainer.innerHTML = html;
   };
 
+
   // Handle button click
   function handleBtnClick(event) {
-    // Get row and column numbers
-    const rowNum = event.target.dataset.row;
-    const colNum = event.target.dataset.column;
+    let rowNum, colNum;
+
+    if (event.target.nodeName === 'IMG') {
+      console.log('image');
+      const button = event.target.parentNode;
+      rowNum = button.getAttribute('data-row');
+      colNum = button.getAttribute('data-column');
+    } else {
+      rowNum = event.target.dataset.row;
+      colNum = event.target.dataset.column;
+    }
 
     // Make sure user clicks inside a square
-    if (!rowNum || !colNum) return;
+    // if (!rowNum || !colNum) return;
 
     gameController.playRound(rowNum, colNum);
     updateScreen();
@@ -294,7 +314,7 @@ function screenController() {
 
     if (winner) {
       winnerMsg.textContent = winner;
-      disableBoard()
+      disableBoard();
     }
   }
 
@@ -306,11 +326,11 @@ function screenController() {
     // Disable inputs
     const form = document.querySelector('#form');
     // console.log(form.elements);
-    Array.from(form.elements).forEach(element => element.disabled = true)
+    Array.from(form.elements).forEach((element) => (element.disabled = true));
 
     // Disable Submit button
     const submitBtn = document.querySelector('#submit-btn');
-    submitBtn.disabled = true
+    submitBtn.disabled = true;
 
     // Disable Start button
     // const startBtn = document.querySelector('#start-btn');
@@ -318,13 +338,12 @@ function screenController() {
 
     // Disable all the buttons in board
     const boardContainer = document.querySelector('.display__board');
-    const squares = boardContainer.querySelectorAll('.cell')
+    const squares = boardContainer.querySelectorAll('.cell');
     // console.log(squares);
-    Array.from(squares).forEach(btn => btn.disabled = true)
+    Array.from(squares).forEach((btn) => (btn.disabled = true));
   }
 
   // disableBoard()
-
 
   function getPlayerNames() {
     // Get inputs
@@ -367,7 +386,6 @@ function screenController() {
     // Get board data and set values to 0
     const board = gameBoard.getBoard();
     board.map((row) => row.map((cell) => cell.setValue()));
-    
 
     // Get error & winner message divs and clear the text
     const winnerMsg = document.querySelector('.display__winner');
@@ -375,12 +393,12 @@ function screenController() {
 
     winnerMsg.textContent = '';
     // errorMsg.textContent = '';
-    gameController.clearWinner()
+    gameController.clearWinner();
 
     // Change winMessage value
-    let winMsg = gameController.getWinner()
+    let winMsg = gameController.getWinner();
     console.log(winMsg);
-    winMsg = ''
+    winMsg = '';
 
     // Get name divs and clear them
     const player1Name = document.querySelector('.players__one');
@@ -408,8 +426,8 @@ function screenController() {
     // Enable Submit button
     const submitBtn = document.querySelector('#submit-btn');
     submitBtn.disabled = false;
-    
-    updateScreen()
+
+    updateScreen();
   }
 
   document.querySelector('#restart-btn').addEventListener('click', restartGame);
@@ -420,4 +438,3 @@ function screenController() {
 }
 
 screenController();
-
