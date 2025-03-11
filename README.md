@@ -1,6 +1,6 @@
 # The Odin Project - Tic Tac Toe solution
 
-This is a solution to the [Tic Tac Toe project on The Odin Project](https://www.theodinproject.com/lessons/node-path-javascript-tic-tac-toe)
+This is a solution for the [Tic Tac Toe project on The Odin Project](https://www.theodinproject.com/lessons/node-path-javascript-tic-tac-toe)
 
 ## Table of contents
 
@@ -14,7 +14,7 @@ This is a solution to the [Tic Tac Toe project on The Odin Project](https://www.
 
 ## Overview
 
-Tic Tac Toe is a simple, two-player game played on a 3x3 grid. In this project players can choose to enter their names or they can play anonymously, and the game will start with the first player. Players take turns marking a square with either an X or an O. The objective fo the game is to be the first to get three of your marks in a row, either horizontally, vertically, or diagonally. If all squares are filled and no player has won, the game ends in a draw. There is also a reset button any time the player wants to restart the game.
+Tic Tac Toe is a simple, two-player game played on a 3x3 grid. In this project players can choose to enter their names or they can play anonymously, and the game will start with the first player. Players take turns marking a square with either an X or an O. The objective of the game is to be the first to get three of your marks in a row, either horizontally, vertically, or diagonally. If all squares are filled and no player has won, the game ends in a draw. There is also a reset button any time the player wants to restart the game.
 
 
 ### Screenshots
