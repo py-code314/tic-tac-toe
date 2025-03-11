@@ -7,4 +7,4 @@
 3. <a target="_blank" href="https://icons8.com/icon/-ymAXN8gSjYa/multiply">Cross</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a> Green cross
 4. <a target="_blank" href="https://icons8.com/icon/KAJtDlcK42LW/multiply">Cross</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a> Blue cross with shadow
 5. <a target="_blank" href="https://icons8.com/icon/JBdPHdFxWGru/close-window">Cross</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a> Yellow cross in red box with shadow
-6. 
+6. background image, css reset - josh comeau's

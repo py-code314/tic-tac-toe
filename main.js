@@ -143,13 +143,19 @@ const gameController = (function (
 
   let errorMessage = '';
 
+  const getErrorMsg = () => errorMessage;
+
+  const clearErrorMsg = () => {
+    errorMessage = ''
+  }
+
   const updateMarker = (row, column) => {
     const success = gameBoard.markSquare(row, column, getActivePlayer().marker);
     // Don't allow player to mark the square already occupied
     if (success) {
       printNewRound();
       checkForWinner();
-      errorMessage = '';
+      clearErrorMsg();
     } else {
       // Show error to player
       console.log(
@@ -160,7 +166,7 @@ const gameController = (function (
     }
   };
 
-  const getErrorMsg = () => errorMessage;
+  
 
   const printNewRound = () => {
     gameBoard.printBoard();
@@ -213,28 +219,38 @@ const gameController = (function (
   return {
     players,
     playRound,
-    getDrawMsg,
-    getWinMsg,
-    clearDrawMsg,
-    clearWinMsg,
-    getErrorMsg,
     getActivePlayer,
     resetActivePlayer,
     resetPlayerNames,
     getBoard: gameBoard.getBoard,
+    getErrorMsg,
+    getDrawMsg,
+    getWinMsg,
+    clearErrorMsg,
+    clearDrawMsg,
+    clearWinMsg,
   };
 })();
 
-function screenController() {
+const screenController = (function () {
   // Get html elements
   const boardContainer = document.querySelector('.display__board');
   const playerTurn = document.querySelector('.display__turn');
   const board = gameController.getBoard();
   const form = document.querySelector('#form');
+  const errorMsgElement = document.querySelector('.display__error');
   const drawMsgElement = document.querySelector('.display__draw');
   const winnerMsgElement = document.querySelector('.display__winner');
   const player1Element = document.querySelector('.players__one');
   const player2Element = document.querySelector('.players__two');
+
+  const showDefaultNames = () => {
+    const player1Img = `<img src="${gameController.players[0].marker}" alt="Player 1 marker" width="30" height="30">`;
+    const player2Img = `<img src="${gameController.players[1].marker}" alt="Player 2 marker" width="30" height="30">`;
+
+    player1Element.innerHTML = `${player1Img} ${gameController.players[0].name}`;
+    player2Element.innerHTML = `${player2Img} ${gameController.players[1].name}`;
+  };
 
   function updatePlayerNames() {
     // Get inputs
@@ -253,13 +269,7 @@ function screenController() {
     updateScreen();
   }
 
-  const showDefaultNames = () => {
-    const player1Img = `<img src="${gameController.players[0].marker}" alt="Player 1 marker" width="30" height="30">`;
-    const player2Img = `<img src="${gameController.players[1].marker}" alt="Player 2 marker" width="30" height="30">`;
-
-    player1Element.innerHTML = `${player1Img} ${gameController.players[0].name}`;
-    player2Element.innerHTML = `${player2Img} ${gameController.players[1].name}`;
-  };
+  
 
   const formatActivePlayerName = () => {
     const activePlayer = gameController.getActivePlayer();
@@ -278,8 +288,6 @@ function screenController() {
 
     // Clear the board after each turn
     boardContainer.textContent = '';
-
-    // const board = gameController.getBoard();
 
     // Render board
     let html = '';
@@ -311,11 +319,11 @@ function screenController() {
   }
 
   const showErrorMsg = () => {
-    const errorElement = document.querySelector('.display__error');
+    // const errorElement = document.querySelector('.display__error');
 
     // Display error message
     const errorMsg = gameController.getErrorMsg();
-    errorElement.textContent = errorMsg;
+    errorMsgElement.textContent = errorMsg;
   };
 
   const showDrawMsg = () => {
@@ -379,12 +387,14 @@ function screenController() {
   const clearMessages = () => {
     // Clear text content of winner and draw message divs
 
+    errorMsgElement.textContent = ''
     winnerMsgElement.textContent = '';
     drawMsgElement.textContent = '';
 
     // Reset draw and win message values
     gameController.clearDrawMsg();
     gameController.clearWinMsg();
+    gameController.clearErrorMsg()
   };
 
   const resetNames = () => {
@@ -413,6 +423,5 @@ function screenController() {
 
   // Initial render
   updateScreen();
-}
+})()
 
-screenController();
