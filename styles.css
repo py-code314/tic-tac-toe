@@ -16,10 +16,10 @@
   --clr-light-grey-2: hsl(0, 0%, 97%);
   --clr-white: hsl(100, 100%, 100%);
   /* --clr-white-1: hsl(210, 17%, 98%); */
-  --clr-dark-grey: #272922;
+  --clr-dark-grey: hsl(77, 9%, 15%);
   --clr-teal: hsl(180, 100%, 25%);
   --clr-light-gold: hsl(49, 89%, 75%);
-  --clr-light-blue: hsl(194, 76%, 87%);
+  --clr-light-blue: hsl(194, 74%, 82%);
   --clr-blue: hsl(207, 93%, 50%);
   --clr-red: hsl(354, 67%, 52%);
   --clr-green: hsl(120, 100%, 20%);

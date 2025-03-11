@@ -13,7 +13,9 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
+    <!-- Web page -->
     <main class="game">
+      <!-- Heading -->
       <div class="heading">
         <img
           src="./images/icon-circle.png"
@@ -29,8 +31,11 @@
           width="64"
           height="64" />
       </div>
+
+      <!-- Instructions -->
       <div class="instructions">
         <h2 class="instructions__title">Instructions to Play</h2>
+        <!-- Instructions list -->
         <ol class="instructions__list">
           <li class="instructions__list-item">
             You can just start playing on page load. Grab one more player for
@@ -52,8 +57,10 @@
         </ol>
       </div>
 
+      <!-- Form -->
       <form id="form" class="form" action="#">
-        <div class="player- form__control">
+        <!-- Player 1 -->
+        <div class="player-1 form__control">
           <label class="form__label" for="player1" name="player1"
             >Player 1:
           </label>
@@ -67,6 +74,7 @@
             required />
         </div>
 
+        <!-- Player 2 -->
         <div class="player-2 form__control">
           <label class="form__label" for="player2" name="player2"
             >Player 2:
@@ -79,24 +87,30 @@
             placeholder="Name"
             required />
         </div>
+
+        <!-- Submit button -->
         <button id="submit-btn" class="btn btn-submit">Submit</button>
       </form>
 
+      <!-- Players names -->
       <div class="players">
         <p class="players__name players__one"></p>
         <p class="players__name players__two"></p>
       </div>
 
+      <!-- Game display -->
       <div class="display">
+        <!-- Active player's name -->
         <p class="display__turn"></p>
-
+        <!-- Game board -->
         <div class="display__board"></div>
-
+        <!-- Error message -->
         <p class="display__error"></p>
+        <!-- Draw message -->
         <p class="display__draw"></p>
-
+        <!-- Winner message -->
         <p class="display__winner"></p>
-
+        <!-- Restart button -->
         <button id="restart-btn" class="btn btn-restart">
           Restart the Game
         </button>
