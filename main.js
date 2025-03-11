@@ -240,16 +240,42 @@ function screenController() {
   const boardContainer = document.querySelector('.display__board');
   const playerTurn = document.querySelector('.display__turn');
 
-  const updatePlayerNames = () => {
+  function updatePlayerNames() {
+    // Get elements
     const player1Element = document.querySelector('.players__one');
     const player2Element = document.querySelector('.players__two');
 
+    // Get inputs
+    let player1Input = document.querySelector('.player1');
+    let player2Input = document.querySelector('.player2');
+
+    // Get images
     const player1Img = `<img src="${gameController.players[0].marker}" alt="Player 1 marker" width="30" height="30">`;
     const player2Img = `<img src="${gameController.players[1].marker}" alt="Player 2 marker" width="30" height="30">`;
 
+    // Get name elements to show names
+    // const player1Name = document.querySelector('.players__one');
+    // const player2Name = document.querySelector('.players__two');
+
+    // player1Name.textContent = player1Input.value;
+
+    // Update players names in players object
+    gameController.players[0].name = player1Input.value;
+    gameController.players[1].name = player2Input.value;
+
+    // Update players names on the screen
     player1Element.innerHTML = `${player1Img} ${gameController.players[0].name}`;
     player2Element.innerHTML = `${player2Img} ${gameController.players[1].name}`;
+
+    // player2Name.textContent = player2Input.value;
+    
+
+    player1Input.value = '';
+    player2Input.value = '';
+
+    updateScreen();
   }
+
 
   const formatActivePlayerName = () => {
     const activePlayer = gameController.getActivePlayer();
@@ -361,36 +387,17 @@ function screenController() {
     Array.from(squares).forEach((btn) => (btn.disabled = true));
   }
 
-  function addPlayerNames() {
-    // Get inputs
-    let player1Input = document.querySelector('.player1');
-    let player2Input = document.querySelector('.player2');
-
-    // Get name elements to show names
-    const player1Name = document.querySelector('.players__one');
-    const player2Name = document.querySelector('.players__two');
-
-    player1Name.textContent = player1Input.value;
-    gameController.players[0].name = player1Input.value;
-
-    player2Name.textContent = player2Input.value;
-    gameController.players[1].name = player2Input.value;
-
-    player1Input.value = '';
-    player2Input.value = '';
-
-    updateScreen();
-  }
+  
   // Add event listener for Submit button
   document.querySelector('#form').addEventListener('submit', (event) => {
     event.preventDefault();
-    addPlayerNames();
+    updatePlayerNames();
   });
 
   document.querySelector('#form').addEventListener('keydown', (event) => {
     if (event.key === 'Enter') {
       event.preventDefault();
-      addPlayerNames();
+      updatePlayerNames();
     }
   });
 
