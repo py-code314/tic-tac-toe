@@ -1,6 +1,7 @@
 /* ===================
    CSS VARIABLES
    =================== */
+
 :root {
   /* Font family */
   --ff-karla: 'Karla', sans-serif;
@@ -9,15 +10,16 @@
   /* Font Weights */
   --fw-bold: 700;
 
+  /* Font sizes */
+  --fs-500: 1.125rem;
+  --fs-700: 1.5rem;
+  --fs-1100: 2.5rem;
+
   /* Colors */
   --clr-black: hsl(0, 0%, 0%);
-  --clr-grey: hsl(0, 0%, 50%);
   --clr-light-grey-1: hsl(0, 0%, 86%);
   --clr-light-grey-2: hsl(0, 0%, 97%);
   --clr-white: hsl(100, 100%, 100%);
-  /* --clr-white-1: hsl(210, 17%, 98%); */
-  --clr-dark-grey: hsl(77, 9%, 15%);
-  --clr-teal: hsl(180, 100%, 25%);
   --clr-light-gold: hsl(49, 89%, 75%);
   --clr-light-blue: hsl(194, 74%, 82%);
   --clr-blue: hsl(207, 93%, 50%);
@@ -26,11 +28,6 @@
   --clr-light-pink: hsl(353, 84%, 85%);
   --clr-dark-brown: hsl(18, 55%, 25%);
 
-  /* Font sizes */
-  --fs-500: 1.125rem;
-  --fs-700: 1.5rem;
-  --fs-1100: 2.5rem;
-
   /* Spacing */
   --space-40: 0.25rem;
   --space-80: 0.5rem;
@@ -38,6 +35,7 @@
   --space-650: 1.375rem;
   --space-700: 1.5rem;
 
+  /* Board dimensions */
   --board-width: 31.25rem;
   --board-height: 31.25rem;
 
@@ -50,7 +48,7 @@
 }
 
 /* ===================
-   JOSH COMEAU' RESET 
+   JOSH COMEAU'S RESET 
    =================== */
 
 /* Use a more-intuitive box-sizing model */
@@ -108,8 +106,9 @@ h6 {
   isolation: isolate;
 }
 
+/* Body styles */
 body {
-  /* background-color: var(--clr-white-1); */
+  font-family: var(--ff-merriweather);
   background-image: linear-gradient(
     45deg,
     hsl(298deg 72% 66%) 0%,
@@ -132,7 +131,6 @@ body {
   justify-content: center;
   align-items: center;
   padding: var(--space-400);
-  font-family: var(--ff-merriweather);
 }
 
 .game {
@@ -141,6 +139,7 @@ body {
   gap: var(--space-700);
 }
 
+/* Heading styles */
 .heading {
   display: flex;
   justify-content: center;
@@ -156,6 +155,7 @@ body {
   font-family: var(--ff-karla);
 }
 
+/* Instructions styles */
 .instructions {
   background-color: var(--clr-light-gold);
   padding: var(--space-400);
@@ -167,6 +167,7 @@ body {
   padding: var(--space-400);
 }
 
+/* Form styles */
 .form {
   display: flex;
   align-items: center;
@@ -183,15 +184,16 @@ body {
 
 .form__input {
   padding: var(--space-40) var(--space-80);
-  border-radius: var(--bd-radius-1);
   border: 1px solid var(--clr-black);
+  border-radius: var(--bd-radius-1);
 }
 
+/* Button styles */
 .btn {
+  font-size: var(--fs-500);
   border: transparent;
   border-radius: var(--bd-radius-1);
-  padding: var(--space-40) var(--space-400);
-  font-size: var(--fs-500);
+  padding: var(--space-80) var(--space-400);
   background-color: var(--clr-blue);
   color: var(--clr-white);
   cursor: pointer;
@@ -201,6 +203,7 @@ body {
   cursor: not-allowed;
 }
 
+/* Player names styles */
 .players {
   display: flex;
   justify-content: space-around;
@@ -220,6 +223,7 @@ body {
   align-content: center;
 }
 
+/* Game display styles */
 .display {
   display: flex;
   flex-direction: column;
@@ -236,27 +240,29 @@ body {
   font-weight: var(--fw-bold);
 }
 
+/* Game board styles */
 .display__board {
-  background-color: var(--clr-white);
   display: grid;
   height: var(--board-height);
   width: var(--board-width);
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
+  background-color: var(--clr-white);
   padding: var(--space-650);
   border: transparent;
   border-radius: var(--bd-radius-2);
   box-shadow: var(--shadow-2);
 }
 
+/* Square styles */
 .cell {
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: var(--clr-white);
   text-align: center;
   font-size: 5rem;
   border: none;
-  background-color: var(--clr-white);
   cursor: pointer;
 }
 
@@ -268,42 +274,26 @@ body {
   cursor: not-allowed;
 }
 
+/* Border styles */
+.cell:nth-child(1),
+.cell:nth-child(2),
+.cell:nth-child(4),
 .cell:nth-child(5) {
   border-right: 2px solid var(--clr-light-grey-1);
   border-bottom: 1px solid var(--clr-light-grey-1);
 }
 
-.cell:nth-child(1) {
-  border-right: 2px solid var(--clr-light-grey-1);
-  border-bottom: 1px solid var(--clr-light-grey-1);
-}
-
-.cell:nth-child(2) {
-  border-right: 2px solid var(--clr-light-grey-1);
-  border-bottom: 1px solid var(--clr-light-grey-1);
-}
-
-.cell:nth-child(3) {
-  border-bottom: 1px solid var(--clr-light-grey-1);
-}
-
-.cell:nth-child(4) {
-  border-bottom: 1px solid var(--clr-light-grey-1);
-  border-right: 2px solid var(--clr-light-grey-1);
-}
-
+.cell:nth-child(3),
 .cell:nth-child(6) {
   border-bottom: 1px solid var(--clr-light-grey-1);
 }
 
-.cell:nth-child(7) {
-  border-right: 2px solid var(--clr-light-grey-1);
-}
-
+.cell:nth-child(7),
 .cell:nth-child(8) {
   border-right: 2px solid var(--clr-light-grey-1);
 }
 
+/* Styles for messages */
 .display__error {
   color: var(--clr-red);
   text-transform: uppercase;
