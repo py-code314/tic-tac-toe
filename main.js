@@ -234,32 +234,32 @@ function screenController() {
   const drawMsgElement = document.querySelector('.display__draw');
   const winnerMsgElement = document.querySelector('.display__winner');
   const player1Element = document.querySelector('.players__one');
-   const player2Element = document.querySelector('.players__two');
+  const player2Element = document.querySelector('.players__two');
 
   function updatePlayerNames() {
-
     // Get inputs
     let player1Input = document.querySelector('.player1');
     let player2Input = document.querySelector('.player2');
 
-    // Get images
-    const player1Img = `<img src="${gameController.players[0].marker}" alt="Player 1 marker" width="30" height="30">`;
-    const player2Img = `<img src="${gameController.players[1].marker}" alt="Player 2 marker" width="30" height="30">`;
-
-    // Update players names in players object
+    player1Element.textContent = player1Input.value;
     gameController.players[0].name = player1Input.value;
+
+    player2Element.textContent = player2Input.value;
     gameController.players[1].name = player2Input.value;
 
-    // Update players names on the screen
-    player1Element.innerHTML = `${player1Img} ${gameController.players[0].name}`;
-    player2Element.innerHTML = `${player2Img} ${gameController.players[1].name}`;
-
-    // Clear input fields
     player1Input.value = '';
     player2Input.value = '';
 
     updateScreen();
   }
+
+  const showDefaultNames = () => {
+    const player1Img = `<img src="${gameController.players[0].marker}" alt="Player 1 marker" width="30" height="30">`;
+    const player2Img = `<img src="${gameController.players[1].marker}" alt="Player 2 marker" width="30" height="30">`;
+
+    player1Element.innerHTML = `${player1Img} ${gameController.players[0].name}`;
+    player2Element.innerHTML = `${player2Img} ${gameController.players[1].name}`;
+  };
 
   const formatActivePlayerName = () => {
     const activePlayer = gameController.getActivePlayer();
@@ -273,7 +273,7 @@ function screenController() {
   };
 
   const updateScreen = () => {
-    updatePlayerNames();
+    showDefaultNames();
     formatActivePlayerName();
 
     // Clear the board after each turn
@@ -319,10 +319,8 @@ function screenController() {
   };
 
   const showDrawMsg = () => {
-
     // Display draw message
     const drawMsg = gameController.getDrawMsg();
-    console.log(drawMsg);
     if (drawMsg) {
       drawMsgElement.textContent = drawMsg;
 
@@ -331,7 +329,6 @@ function screenController() {
   };
 
   const showWinMsg = () => {
-
     // Display winner message
     const winMsg = gameController.getWinMsg();
     if (winMsg) {
