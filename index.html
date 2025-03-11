@@ -33,13 +33,18 @@
         <h2 class="instructions__title">Instructions to Play</h2>
         <ol class="instructions__list">
           <li class="instructions__list-item">
-            You can choose to enter the names of players or not!
+            You can just start playing on page load. Grab one more player for
+            more fun!
           </li>
           <li class="instructions__list-item">
-            Enter your names and click Start button to start playing.
+            You can choose to enter your names or not! Press Submit after you
+            enter your names.
           </li>
           <li class="instructions__list-item">
-            Or just click the Start button if you want to play anonymously.
+            Decide who wants to take first turn before starting the game.
+          </li>
+          <li class="instructions__list-item">
+            Player who makes 3 in a row, column or diagonal first wins.
           </li>
           <li class="instructions__list-item">
             Click Restart button any time you want to reset the game.
@@ -78,20 +83,17 @@
       </form>
 
       <div class="players">
-        
         <p class="players__name players__one"></p>
         <p class="players__name players__two"></p>
       </div>
 
       <div class="display">
-        <!-- <button id="start-btn" class="btn btn-start">Start the Game</button> -->
-
         <p class="display__turn"></p>
 
         <div class="display__board"></div>
 
         <p class="display__error"></p>
-        
+        <p class="display__draw"></p>
 
         <p class="display__winner"></p>
 

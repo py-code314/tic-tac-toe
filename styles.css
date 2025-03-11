@@ -1,5 +1,4 @@
 
-
 /* ===================
    CSS VARIABLES
    =================== */
@@ -14,18 +13,18 @@
   /* Colors */
   --clr-black: hsl(0, 0%, 0%);
   --clr-grey: hsl(0, 0%, 50%);
-  --clr-light-grey: hsl(0, 0%, 86%);
+  --clr-light-grey-1: hsl(0, 0%, 86%);
+  --clr-light-grey-2: hsl(0, 0%, 97%);
   --clr-white: hsl(100, 100%, 100%);
   --clr-white-1: hsl(210, 17%, 98%);
   --clr-teal: hsl(180, 100%, 25%);
   --clr-light-gold: hsl(49, 89%, 75%);
-  /* --clr-light-yellow: hsl(60, 96%, 74%); */
   --clr-light-blue: hsl(194, 76%, 87%);
-  /* --clr-light-slate-grey: hsl(210, 32%, 73%); */
   --clr-blue: hsl(207, 93%, 50%);
   --clr-red: hsl(354, 67%, 52%);
   --clr-green: hsl(120, 100%, 20%);
   --clr-light-pink: hsl(353, 84%, 85%);
+  --clr-dark-brown: hsl(18, 55%, 25%);
 
   /* Font sizes */
   --fs-500: 1.125rem;
@@ -204,10 +203,7 @@ body {
   font-size: var(--fs-700);
   text-transform: uppercase;
   font-weight: var(--fw-bold);
-  /* background-color: #eff2f5; */
   border-radius: var(--bd-radius-1);
-  /* padding: var(--space-80) var(--space-400); */
-  /* border: 1px solid var(--clr-black); */
   display: flex;
   justify-content: center;
   align-content: center;
@@ -223,6 +219,7 @@ body {
 
 .display__turn,
 .display__error,
+.display__draw,
 .display__winner {
   font-size: var(--fs-700);
   font-weight: var(--fw-bold);
@@ -235,10 +232,7 @@ body {
   width: var(--board-width);
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
-  /* border: 5px solid var(--clr-black); */
-  /* gap: 2px; */
   padding: var(--space-650);
-  /* background-color: steelblue; */
   border: transparent;
   border-radius: var(--bd-radius-2);
   box-shadow: var(--shadow-2);
@@ -252,12 +246,11 @@ body {
   font-size: 5rem;
   border: none;
   background-color: var(--clr-white);
-  
-  /* border: 2px solid var(--clr-grey); */
-  /* background: var(--clr-teal); */
-  /* color: var(--clr-white); */
   cursor: pointer;
-  /* margin: 0; */
+}
+
+.cell:hover {
+  background-color: var(--clr-light-grey-2);
 }
 
 .cell:disabled {
@@ -267,46 +260,55 @@ body {
 
 
 .cell:nth-child(5) {
-  border-right: 2px solid var(--clr-light-grey);
-  border-bottom: 1px solid var(--clr-light-grey);
+  border-right: 2px solid var(--clr-light-grey-1);
+  border-bottom: 1px solid var(--clr-light-grey-1);
 }
 
 .cell:nth-child(1) {
-  border-right: 2px solid var(--clr-light-grey);
-  border-bottom: 1px solid var(--clr-light-grey);
+  border-right: 2px solid var(--clr-light-grey-1);
+  border-bottom: 1px solid var(--clr-light-grey-1);
 }
 
 .cell:nth-child(2) {
-  border-right: 2px solid var(--clr-light-grey);
-  border-bottom: 1px solid var(--clr-light-grey);
+  border-right: 2px solid var(--clr-light-grey-1);
+  border-bottom: 1px solid var(--clr-light-grey-1);
 }
 
 .cell:nth-child(3) {
-  border-bottom: 1px solid var(--clr-light-grey);
+  border-bottom: 1px solid var(--clr-light-grey-1);
 }
 
 .cell:nth-child(4) {
-  border-bottom: 1px solid var(--clr-light-grey);
-  border-right: 2px solid var(--clr-light-grey);
+  border-bottom: 1px solid var(--clr-light-grey-1);
+  border-right: 2px solid var(--clr-light-grey-1);
 }
 
 .cell:nth-child(6) {
-  border-bottom: 1px solid var(--clr-light-grey);
+  border-bottom: 1px solid var(--clr-light-grey-1);
 }
 
 .cell:nth-child(7) {
-  border-right: 2px solid var(--clr-light-grey);
+  border-right: 2px solid var(--clr-light-grey-1);
   
 }
 
 .cell:nth-child(8) {
-  border-right: 2px solid var(--clr-light-grey);
+  border-right: 2px solid var(--clr-light-grey-1);
 }
 
 .display__error {
   color: var(--clr-red);
+  text-transform: uppercase;
+  width: var(--board-width);
+  text-align: center;
+}
+
+.display__draw {
+  color: var(--clr-dark-brown);
+  text-transform: uppercase;
 }
 
 .display__winner {
   color: var(--clr-green);
+  text-transform: uppercase;
 }

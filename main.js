@@ -15,15 +15,14 @@ const gameBoard = (function () {
   // Get board
   const getBoard = () => board;
 
-  // Update square value with Marker when a play has been made
-  const updateMarker = (row, column, player) => {
-    if (board[row][column].getValue() === '') {
-      console.log(board[row][column].getValue());
-      board[row][column].addMarker(player);
+  // Update square value with marker when a play has been made
+  const markSquare = (row, column, marker) => {
+    const square = board[row][column];
+    if (square.getValue() === '') {
+      square.addMarker(marker);
       return true;
-    } else {
-      return false;
     }
+    return false;
   };
 
   // Print board to console
@@ -32,34 +31,19 @@ const gameBoard = (function () {
     console.log(squares);
   };
 
-  return { getBoard, printBoard, updateMarker };
+  return { getBoard, printBoard, markSquare };
 })();
-
-// gameBoard()
 
 function square() {
   let value = '';
 
-  // Update value of square
-  const addMarker = (player) => {
-    let html = '';
-    html += `<img class='cell__image' src='${player}' alt='' width='80' height='80'>`;
-
-    value = html;
-
-    // let html = '';
-    // board.forEach((row, rowIndex) => {
-    //   row.forEach((cell, columnIndex) => {
-    //     html += `
-    //   <img data-row="${rowIndex}" data-column="${columnIndex}" src='${player}' alt='' width='80' height='80'>
-    // `;
-    //     cell.innerHTML = html
-    //   });
-    // });
-  };
-
   // Get value of square
   const getValue = () => value;
+
+  // Add marker to square
+  const addMarker = (marker) => {
+    value = `<img class="cell__image" src="${marker}" alt="" width="80" height="80">`;
+  };
 
   // Reset value to 0
   const setValue = () => (value = '');
@@ -70,28 +54,17 @@ function square() {
 const checkValues = (function () {
   const board = gameBoard.getBoard();
 
-  // Loop through every row and check the values are same
-  const checkRows = () => {
-    let sameValues = false;
-    const rowsCheck = board.map((row) => {
+  // Check the squares in each row for same values
+  const checkRows = () =>
+    board.some((row) => {
       const rowValues = row.map((cell) => cell.getValue());
-      const allSame = rowValues.every(
-        (value) => value !== '' && value === rowValues[0]
-      );
-
-      if (allSame) {
-        sameValues = true;
-      }
+      return rowValues.every((value) => value !== '' && value === rowValues[0]);
     });
-
-    return sameValues;
-  };
 
   // Loop through every column and check the values are same
   const checkColumns = () => {
     for (let columnIndex = 0; columnIndex < board.length; columnIndex++) {
       const columnValues = board.map((row) => row[columnIndex].getValue());
-
       const allSame = columnValues.every(
         (value) => value !== '' && value === columnValues[0]
       );
@@ -104,7 +77,6 @@ const checkValues = (function () {
 
   // Check the squares diagonally for same values
   const checkDiagonals = () => {
-    // const board = gameBoard.getBoard();
     const leftToRightDiagonal = [];
     const rightToLeftDiagonal = [];
 
@@ -125,19 +97,19 @@ const checkValues = (function () {
     }
   };
 
-  const checkForZeroes = () => {
+  const checkEmptySquares = () => {
     const board = gameBoard.getBoard();
     return board.some((row) => row.some((cell) => cell.getValue() === ''));
   };
 
-  const hasZeroes = () => checkForZeroes();
+  const hasEmptySquares = () => checkEmptySquares();
 
-  return { checkRows, checkColumns, checkDiagonals, hasZeroes };
+  return { checkRows, checkColumns, checkDiagonals, hasEmptySquares };
 })();
 
 const gameController = (function (
-  player1Name = 'Player 1',
-  player2Name = 'Player 2'
+  player1Name = 'player 1',
+  player2Name = 'player 2'
 ) {
   // Create players
   let players = [
@@ -151,14 +123,13 @@ const gameController = (function (
     },
   ];
 
-  // const getPlayers = () => players
+  const resetPlayerNames = () => {
+    players[0].name = 'player 1';
+    players[1].name = 'player 2';
+  };
 
   let activePlayer = players[0];
 
-  const switchPlayerTurn = () => {
-    activePlayer = activePlayer === players[0] ? players[1] : players[0];
-  };
-  console.log(activePlayer);
   const getActivePlayer = () => activePlayer;
 
   // Reset active player
@@ -166,45 +137,14 @@ const gameController = (function (
     activePlayer = players[0];
   };
 
-  const printNewRound = () => {
-    gameBoard.printBoard();
-    // console.log(`${getActivePlayer().name}'s turn.`);
-  };
-
-  let winMessage = '';
-  function checkForWinner() {
-    const winner =
-      checkValues.checkRows() ||
-      checkValues.checkColumns() ||
-      checkValues.checkDiagonals();
-
-    if (winner) {
-      console.log(`${getActivePlayer().name} has won`);
-      winMessage = `${getActivePlayer().name} has won`;
-    } else if (!winner && !checkValues.hasZeroes()) {
-      console.log(`Game is a draw`);
-      winMessage = `Game is a draw`;
-    } else {
-      switchPlayerTurn();
-      console.log(`${getActivePlayer().name}'s turn.`);
-    }
-  }
-
-  const getWinner = () => winMessage;
-
-  const clearWinner = () => {
-    winMessage = '';
+  const switchPlayerTurn = () => {
+    activePlayer = activePlayer === players[0] ? players[1] : players[0];
   };
 
   let errorMessage = '';
 
-  const updateMarkerSuccess = (row, column) => {
-    const success = gameBoard.updateMarker(
-      row,
-      column,
-      getActivePlayer().marker
-    );
-    console.log(success);
+  const updateMarker = (row, column) => {
+    const success = gameBoard.markSquare(row, column, getActivePlayer().marker);
     // Don't allow player to mark the square already occupied
     if (success) {
       printNewRound();
@@ -215,12 +155,17 @@ const gameController = (function (
       console.log(
         `Square at row ${row}, column ${column} is already occupied. Choose a different square.`
       );
-      errorMessage = `Please choose a different square.`;
+      errorMessage = `Square is already occupied. Please choose a different one.`;
       console.log(`${getActivePlayer().name}'s turn.`);
     }
   };
 
-  const getError = () => errorMessage;
+  const getErrorMsg = () => errorMessage;
+
+  const printNewRound = () => {
+    gameBoard.printBoard();
+  };
+
 
   const playRound = (row, column) => {
     console.log(
@@ -229,7 +174,44 @@ const gameController = (function (
       } marking the square in row: ${row} column: ${column}`
     );
 
-    updateMarkerSuccess(row, column);
+    updateMarker(row, column);
+  };
+
+  // let winOrDrawMsg = '';
+  let winMessage = ''
+  let drawMessage = ''
+  const checkForWinner = () => {
+    const isWinner =
+      checkValues.checkRows() ||
+      checkValues.checkColumns() ||
+      checkValues.checkDiagonals();
+
+    if (isWinner) {
+      console.log(`${getActivePlayer().name} has won`);
+      winMessage = `${getActivePlayer().name} has won`;
+      // winOrDrawMsg = `${getActivePlayer().name} has won`;
+    } else if (!isWinner && !checkValues.hasEmptySquares()) {
+      console.log(`The game is a draw`);
+      drawMessage = `The game is a draw`;
+      // winOrDrawMsg = `The game is a draw`;
+    } else {
+      switchPlayerTurn();
+      console.log(`${getActivePlayer().name}'s turn.`);
+    }
+  };
+
+  // const getMessage = () => winOrDrawMsg;
+  const getWinMsg = () => winMessage
+  const getDrawMsg = () => drawMessage
+
+  // const clearMessage = () => {
+  //   winOrDrawMsg = '';
+  // };
+  const clearWinMsg = () => {
+    winMessage = '';
+  };
+  const clearDrawMsg = () => {
+    drawMessage = '';
   };
 
   // Initial render
@@ -239,13 +221,16 @@ const gameController = (function (
   return {
     players,
     playRound,
-    checkForWinner,
-    getWinner,
-    clearWinner,
-    getError,
+    // getMessage,
+    // clearMessage,
+    getDrawMsg,
+    getWinMsg,
+    clearDrawMsg,
+    clearWinMsg,
+    getErrorMsg,
     getActivePlayer,
     resetActivePlayer,
-    updateMarkerSuccess,
+    resetPlayerNames,
     getBoard: gameBoard.getBoard,
   };
 })();
@@ -255,30 +240,36 @@ function screenController() {
   const boardContainer = document.querySelector('.display__board');
   const playerTurn = document.querySelector('.display__turn');
 
-  const updateScreen = () => {
-    // Get name elements to show names
-    const player1Name = document.querySelector('.players__one');
-    const player2Name = document.querySelector('.players__two');
+  const updatePlayerNames = () => {
+    const player1Element = document.querySelector('.players__one');
+    const player2Element = document.querySelector('.players__two');
 
-    const imageHtml1 = `<img src="${gameController.players[0].marker}" alt="" width="30" height="30">`;
-    const imageHtml2 = `<img src="${gameController.players[1].marker}" alt="" width="30" height="30">`;
-    
-    player1Name.textContent = gameController.players[0].name;
-    player1Name.innerHTML = imageHtml1 + player1Name.textContent;
-    
-    player2Name.textContent = gameController.players[1].name;
-    player2Name.innerHTML = imageHtml2 + player2Name.textContent;
-    
+    const player1Img = `<img src="${gameController.players[0].marker}" alt="Player 1 marker" width="30" height="30">`;
+    const player2Img = `<img src="${gameController.players[1].marker}" alt="Player 2 marker" width="30" height="30">`;
+
+    player1Element.innerHTML = `${player1Img} ${gameController.players[0].name}`;
+    player2Element.innerHTML = `${player2Img} ${gameController.players[1].name}`;
+  }
+
+  const formatActivePlayerName = () => {
+    const activePlayer = gameController.getActivePlayer();
+    const name = activePlayer.name;
+
+    // Format player's name for display
+    const formattedName = `${name.charAt(0).toUpperCase()}${name.slice(1)}`;
+
+    // Display player's turn
+    playerTurn.textContent = `${formattedName}'s turn...`;
+  };
+
+  const updateScreen = () => {
+    updatePlayerNames()
+    formatActivePlayerName();
 
     // Clear the board after each turn
     boardContainer.textContent = '';
 
-    // Get board data and active player's name after each turn
-    const activePlayer = gameController.getActivePlayer();
     const board = gameController.getBoard();
-
-    // Display player's turn
-    playerTurn.textContent = `${activePlayer.name}'s turn...`;
 
     // Render board
     let html = '';
@@ -294,48 +285,60 @@ function screenController() {
 
   // Handle button click
   function handleBtnClick(event) {
-    let rowNum, colNum;
+    const target = event.target;
+    const isImg = target.nodeName === 'IMG';
+    const button = isImg ? target.parentNode : target;
+    const row = button.dataset.row;
+    const col = button.dataset.column;
 
-    if (event.target.nodeName === 'IMG') {
-      console.log('image');
-      const button = event.target.parentNode;
-      rowNum = button.getAttribute('data-row');
-      colNum = button.getAttribute('data-column');
-    } else {
-      rowNum = event.target.dataset.row;
-      colNum = event.target.dataset.column;
-    }
+    if (!row || !col) return;
 
-    // Make sure user clicks inside a square
-    // if (!rowNum || !colNum) return;
-
-    gameController.playRound(rowNum, colNum);
+    gameController.playRound(row, col);
     updateScreen();
-    showMessage();
+    showErrorMsg()
+    // showMessages();
+    showDrawMsg()
+    showWinMsg()
   }
 
   boardContainer.addEventListener('click', handleBtnClick);
 
-  function showMessage() {
-    const winnerMsg = document.querySelector('.display__winner');
-    const errorMsg = document.querySelector('.display__error');
+  const showErrorMsg = () => {
+    const errorElement = document.querySelector('.display__error');
 
-    //  const playerTurn = document.querySelector('.display__turn');
+    // Display error message
+    const errorMsg = gameController.getErrorMsg();
+    errorElement.textContent = errorMsg;
+  }
 
-    // Show error message
-    const error = gameController.getError();
-    // console.log(error);
-    errorMsg.textContent = error;
+  const showDrawMsg = () => {
+    const drawElement = document.querySelector('.display__draw');
 
-    // Show winning message
-    const winner = gameController.getWinner();
-    // console.log(winner);
+    // Display draw message
+    const drawMsg = gameController.getDrawMsg();
+    console.log(drawMsg);
+    if (drawMsg) {
+      drawElement.textContent = drawMsg;
 
-    if (winner) {
-      winnerMsg.textContent = winner;
       disableBoard();
     }
+    
   }
+
+  const showWinMsg = () => {
+    const winElement = document.querySelector('.display__winner');
+
+    // Display winner message
+    const winMsg = gameController.getWinMsg();
+    console.log(winMsg);
+    if (winMsg) {
+      winElement.textContent = winMsg;
+
+      disableBoard();
+    }
+    
+  }
+
 
   function disableBoard() {
     // Clear active player's name
@@ -351,10 +354,6 @@ function screenController() {
     const submitBtn = document.querySelector('#submit-btn');
     submitBtn.disabled = true;
 
-    // Disable Start button
-    // const startBtn = document.querySelector('#start-btn');
-    // startBtn.disabled = true
-
     // Disable all the buttons in board
     const boardContainer = document.querySelector('.display__board');
     const squares = boardContainer.querySelectorAll('.cell');
@@ -362,13 +361,10 @@ function screenController() {
     Array.from(squares).forEach((btn) => (btn.disabled = true));
   }
 
-  // disableBoard()
-
-  function getPlayerNames() {
+  function addPlayerNames() {
     // Get inputs
     let player1Input = document.querySelector('.player1');
     let player2Input = document.querySelector('.player2');
-    // console.log(player1Input, player2Input);
 
     // Get name elements to show names
     const player1Name = document.querySelector('.players__one');
@@ -376,7 +372,6 @@ function screenController() {
 
     player1Name.textContent = player1Input.value;
     gameController.players[0].name = player1Input.value;
-    // console.log(gameController.players[0].name);
 
     player2Name.textContent = player2Input.value;
     gameController.players[1].name = player2Input.value;
@@ -387,74 +382,68 @@ function screenController() {
     updateScreen();
   }
   // Add event listener for Submit button
-  document.querySelector('#form').addEventListener('click', (event) => {
+  document.querySelector('#form').addEventListener('submit', (event) => {
     event.preventDefault();
-    getPlayerNames();
+    addPlayerNames();
   });
 
   document.querySelector('#form').addEventListener('keydown', (event) => {
     if (event.key === 'Enter') {
       event.preventDefault();
-      getPlayerNames();
-      player1Input = '';
-      player2Input = '';
+      addPlayerNames();
     }
   });
 
-  function restartGame() {
-    // Get board data and set values to 0
+  const resetBoard = () => {
+    // Reset the values of the board
     const board = gameBoard.getBoard();
-    board.map((row) => row.map((cell) => cell.setValue()));
+    board.forEach((row) => row.forEach((cell) => cell.setValue('')));
+  };
 
-    // Get error & winner message divs and clear the text
-    const winnerMsg = document.querySelector('.display__winner');
-    // const errorMsg = document.querySelector('.display__error');
+  const clearMessages = () => {
+    // Clear text content of winner and draw message divs
+    const winnerMsgElement = document.querySelector('.display__winner');
+    const drawMsgElement = document.querySelector('.display__draw');
 
-    winnerMsg.textContent = '';
-    // errorMsg.textContent = '';
-    gameController.clearWinner();
+    winnerMsgElement.textContent = '';
+    drawMsgElement.textContent = '';
 
-    // Change winMessage value
-    let winMsg = gameController.getWinner();
-    console.log(winMsg);
-    winMsg = '';
+    // Reset draw and win message values
+    gameController.clearDrawMsg();
+    gameController.clearWinMsg();
+  }
 
+  const resetNames = () => {
     // Get name divs and clear them
     const player1Name = document.querySelector('.players__one');
     const player2Name = document.querySelector('.players__two');
 
     player1Name.textContent = '';
     player2Name.textContent = '';
+  }
+
+  function resetGame() {
+
+    resetBoard()
+    clearMessages()
+    resetNames()
 
     // Reset active player
     gameController.resetActivePlayer();
 
-    // Reset players names
-    // gameController.players[0].name = 'Player 1';
-    // gameController.players[1].name = 'Player 2';
-
-    // Display player's turn
-    // const activePlayer = gameController.getActivePlayer();
-    // playerTurn.textContent = `${activePlayer.name}'s turn...`;
+    // Reset player names
+    gameController.resetPlayerNames();
 
     // Enable inputs
     const form = document.querySelector('#form');
     // console.log(form.elements);
     Array.from(form.elements).forEach((element) => (element.disabled = false));
 
-    // Clear player turn text
-    // playerTurn.textContent = ''
-
-    // Enable Submit button
-    const submitBtn = document.querySelector('#submit-btn');
-    submitBtn.disabled = false;
-
     updateScreen();
   }
 
-  document.querySelector('#restart-btn').addEventListener('click', restartGame);
+  document.querySelector('#restart-btn').addEventListener('click', resetGame);
 
-  // document.querySelector('#start-btn').addEventListener('click', restartGame)
   // Initial render
   updateScreen();
 }
