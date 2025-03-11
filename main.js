@@ -1,3 +1,4 @@
+/* Game initialization */
 const gameBoard = (function () {
   // Create a board
   const rows = 3;
@@ -34,6 +35,7 @@ const gameBoard = (function () {
   return { getBoard, printBoard, markSquare };
 })();
 
+/* Function to create a square object */
 function square() {
   let value = '';
 
@@ -45,12 +47,13 @@ function square() {
     value = `<img class="cell__image" src="${marker}" alt="" width="80" height="80">`;
   };
 
-  // Reset value to 0
+  // Reset value to ''
   const setValue = () => (value = '');
 
   return { getValue, addMarker, setValue };
 }
 
+/* Function to check if there is a winner */
 const checkValues = (function () {
   const board = gameBoard.getBoard();
 
@@ -61,7 +64,7 @@ const checkValues = (function () {
       return rowValues.every((value) => value !== '' && value === rowValues[0]);
     });
 
-  // Loop through every column and check the values are same
+  // Loop through every column and check if values are same
   const checkColumns = () => {
     for (let columnIndex = 0; columnIndex < board.length; columnIndex++) {
       const columnValues = board.map((row) => row[columnIndex].getValue());
@@ -97,6 +100,7 @@ const checkValues = (function () {
     }
   };
 
+  /* Returns true if there is an empty square in the board, false otherwise */
   const checkEmptySquares = () => {
     const board = gameBoard.getBoard();
     return board.some((row) => row.some((cell) => cell.getValue() === ''));
@@ -107,6 +111,7 @@ const checkValues = (function () {
   return { checkRows, checkColumns, checkDiagonals, hasEmptySquares };
 })();
 
+/* Game Logic */
 const gameController = (function (
   player1Name = 'player 1',
   player2Name = 'player 2'
@@ -123,6 +128,7 @@ const gameController = (function (
     },
   ];
 
+  /* Resets the names of the players to their default values */
   const resetPlayerNames = () => {
     players[0].name = 'player 1';
     players[1].name = 'player 2';
@@ -146,18 +152,21 @@ const gameController = (function (
   const getErrorMsg = () => errorMessage;
 
   const clearErrorMsg = () => {
-    errorMessage = ''
-  }
+    errorMessage = '';
+  };
 
+  /*
+   Update the game state by marking the square with the active player's marker.
+   Show an error if the square is already occupied 
+  */
   const updateMarker = (row, column) => {
     const success = gameBoard.markSquare(row, column, getActivePlayer().marker);
-    // Don't allow player to mark the square already occupied
+
     if (success) {
       printNewRound();
       checkForWinner();
       clearErrorMsg();
     } else {
-      // Show error to player
       console.log(
         `Square at row ${row}, column ${column} is already occupied. Choose a different square.`
       );
@@ -166,12 +175,11 @@ const gameController = (function (
     }
   };
 
-  
-
   const printNewRound = () => {
     gameBoard.printBoard();
   };
 
+  /* Updates the marker and checks for winner */
   const playRound = (row, column) => {
     console.log(
       `${
@@ -184,6 +192,8 @@ const gameController = (function (
 
   let winMessage = '';
   let drawMessage = '';
+
+  /* Checks for a win or draw state of the board */
   const checkForWinner = () => {
     const isWinner =
       checkValues.checkRows() ||
@@ -203,11 +213,13 @@ const gameController = (function (
   };
 
   const getWinMsg = () => winMessage;
+
   const getDrawMsg = () => drawMessage;
 
   const clearWinMsg = () => {
     winMessage = '';
   };
+
   const clearDrawMsg = () => {
     drawMessage = '';
   };
@@ -232,6 +244,7 @@ const gameController = (function (
   };
 })();
 
+/* UI updates */
 const screenController = (function () {
   // Get html elements
   const boardContainer = document.querySelector('.display__board');
@@ -244,33 +257,38 @@ const screenController = (function () {
   const player1Element = document.querySelector('.players__one');
   const player2Element = document.querySelector('.players__two');
 
+  /* Displays the default player names along with their markers on the UI */
   const showDefaultNames = () => {
     const player1Img = `<img src="${gameController.players[0].marker}" alt="Player 1 marker" width="30" height="30">`;
     const player2Img = `<img src="${gameController.players[1].marker}" alt="Player 2 marker" width="30" height="30">`;
 
+    // Display player names
     player1Element.innerHTML = `${player1Img} ${gameController.players[0].name}`;
     player2Element.innerHTML = `${player2Img} ${gameController.players[1].name}`;
   };
 
+  /* Updates the player names based on the input values from the form */
   function updatePlayerNames() {
     // Get inputs
     let player1Input = document.querySelector('.player1');
     let player2Input = document.querySelector('.player2');
 
+    // Update player names
     player1Element.textContent = player1Input.value;
-    gameController.players[0].name = player1Input.value;
-
     player2Element.textContent = player2Input.value;
+
+    // Update players object
+    gameController.players[0].name = player1Input.value;
     gameController.players[1].name = player2Input.value;
 
+    // Clear inputs
     player1Input.value = '';
     player2Input.value = '';
 
     updateScreen();
   }
 
-  
-
+  /* Formats the active player's name for display by capitalizing the first letter */
   const formatActivePlayerName = () => {
     const activePlayer = gameController.getActivePlayer();
     const name = activePlayer.name;
@@ -282,6 +300,7 @@ const screenController = (function () {
     playerTurn.textContent = `${formattedName}'s turn...`;
   };
 
+  /* Updates the UI elements to reflect the current state of the game */
   const updateScreen = () => {
     showDefaultNames();
     formatActivePlayerName();
@@ -301,14 +320,16 @@ const screenController = (function () {
     boardContainer.innerHTML = html;
   };
 
-  // Handle button click
+  /* Handles click events on the board */
   function handleBtnClick(event) {
     const target = event.target;
     const isImg = target.nodeName === 'IMG';
+    // Check if the clicked element is an image or a button
     const button = isImg ? target.parentNode : target;
     const row = button.dataset.row;
     const col = button.dataset.column;
 
+    // Make sure user clicked on a button or image
     if (!row || !col) return;
 
     gameController.playRound(row, col);
@@ -318,16 +339,14 @@ const screenController = (function () {
     showWinMsg();
   }
 
+  /* Displays error message */
   const showErrorMsg = () => {
-    // const errorElement = document.querySelector('.display__error');
-
-    // Display error message
     const errorMsg = gameController.getErrorMsg();
     errorMsgElement.textContent = errorMsg;
   };
 
+  /* Displays draw message */
   const showDrawMsg = () => {
-    // Display draw message
     const drawMsg = gameController.getDrawMsg();
     if (drawMsg) {
       drawMsgElement.textContent = drawMsg;
@@ -336,8 +355,8 @@ const screenController = (function () {
     }
   };
 
+  /* Displays win message */
   const showWinMsg = () => {
-    // Display winner message
     const winMsg = gameController.getWinMsg();
     if (winMsg) {
       winnerMsgElement.textContent = winMsg;
@@ -346,26 +365,24 @@ const screenController = (function () {
     }
   };
 
+  /* Disable the form and board */
   function disableBoard() {
     // Clear active player's name
     playerTurn.textContent = '';
 
-    // Disable inputs
+    // Disable all form elements
     Array.from(form.elements).forEach((element) => (element.disabled = true));
-
-    // Disable Submit button
-    const submitBtn = document.querySelector('#submit-btn');
-    submitBtn.disabled = true;
 
     // Disable all the buttons in board
     const squares = boardContainer.querySelectorAll('.cell');
     Array.from(squares).forEach((btn) => (btn.disabled = true));
   }
 
+  /* Resets the game state and UI */
   function resetGame() {
     resetBoard();
     clearMessages();
-    resetNames();
+    clearPlayerNames();
 
     // Reset active player
     gameController.resetActivePlayer();
@@ -379,32 +396,32 @@ const screenController = (function () {
     updateScreen();
   }
 
+  /* Resets the board */
   const resetBoard = () => {
     // Reset the values of the board
     board.forEach((row) => row.forEach((cell) => cell.setValue('')));
   };
 
+  /* Clears messages */
   const clearMessages = () => {
-    // Clear text content of winner and draw message divs
 
-    errorMsgElement.textContent = ''
+    errorMsgElement.textContent = '';
     winnerMsgElement.textContent = '';
     drawMsgElement.textContent = '';
 
-    // Reset draw and win message values
+    // Reset error, draw and win message values
     gameController.clearDrawMsg();
     gameController.clearWinMsg();
-    gameController.clearErrorMsg()
+    gameController.clearErrorMsg();
   };
 
-  const resetNames = () => {
-    // Get name divs and clear them
-
+  /* Clears the player names */
+  const clearPlayerNames = () => {
     player1Element.textContent = '';
     player2Element.textContent = '';
   };
 
-  // Add event listener for Submit button
+  /* Event listeners */
   document.querySelector('#form').addEventListener('submit', (event) => {
     event.preventDefault();
     updatePlayerNames();
@@ -423,5 +440,4 @@ const screenController = (function () {
 
   // Initial render
   updateScreen();
-})()
-
+})();
